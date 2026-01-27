@@ -1,5 +1,9 @@
-import wonderwords as ww
+from faker import Faker
 
-r = ww.RandomWord()
+# Default to german words/names
+localization = "de_DE"
 
-print(r.word())
+fake = Faker(localization)
+
+for i in range(10):
+    pass
