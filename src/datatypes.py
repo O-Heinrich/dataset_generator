@@ -10,7 +10,7 @@ class Datatype(Enum):
     HOUSENUMBER = 19
     TOWN = 7
     PLZ = 8
-    FULL_ADDRESS = 18
+    FULL_ADDRESS = 18 # UNSUPPORTED
     MONEY = 9
     INTEGER = 10
     FLOAT = 11
@@ -21,4 +21,4 @@ class Datatype(Enum):
     FORMAT_STRING = 16
     RANDOM_STRING = 17
     PRIMARY_KEY = 20
-    FOREIGN_KEY = 21
+    FOREIGN_KEY = 21 # UNSUPPORTED
