@@ -1,0 +1,14 @@
+{
+    "db_name": "my_cool_database",
+    "columns": {
+        "id": "PRIMARY_KEY",
+        "value": {
+            "type": "INTEGER",
+            "max": 100
+        },
+        "name": "FULL_NAME",
+        "date": "DATE",
+        "plz": "PLZ",
+        "town": "TOWN"
+    }
+}

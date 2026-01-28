@@ -14,5 +14,5 @@ generator_venv/bin/pip install rstr
 ### Usage
 
 ```console
-python dataset_gen.py
+python src/dataset_gen.py
 ```
