@@ -6,4 +6,5 @@ localization = "de_DE"
 fake = Faker(localization)
 
 for i in range(10):
-    pass
+    date = fake.currency()
+    print(date, type(date))
