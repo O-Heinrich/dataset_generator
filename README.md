@@ -9,3 +9,9 @@ python -m venv generator_venv
 generator_venv/bin/pip install wonderwords
 generator_venv/bin/pip install Faker
 ```
+
+### Usage
+
+```console
+python dataset_gen.py
+```
