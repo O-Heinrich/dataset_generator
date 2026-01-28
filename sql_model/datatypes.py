@@ -20,3 +20,5 @@ class Datatype(Enum):
     VALUES = 15
     FORMAT_STRING = 16
     RANDOM_STRING = 17
+    PRIMARY_KEY = 20
+    FOREIGN_KEY = 21

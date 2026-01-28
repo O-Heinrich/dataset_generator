@@ -8,6 +8,7 @@ Script zum Generieren von Beispiel-Datensätzen für relationale Datenbanken
 python -m venv generator_venv
 generator_venv/bin/pip install wonderwords
 generator_venv/bin/pip install Faker
+generator_venv/bin/pip install rstr
 ```
 
 ### Usage
