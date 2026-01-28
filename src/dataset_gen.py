@@ -14,6 +14,7 @@ parser.add_argument('-e', action="store", dest="encoding", default="utf-8")
 parser.add_argument('-p', action="store", dest="jsonfile", default="example.json")
 parser.add_argument('-f', action="store", dest="filepath", default="")
 parser.add_argument('-a', action="store_true", dest="append", default=False)
+parser.add_argument('-o', action="store_true", dest="overwrite", default=False)
 parser.add_argument('-n', action="store", dest="amount", type=int, default=20)
 
 # get input arguments
@@ -23,12 +24,13 @@ encoding = parsed.encoding
 jsonPath = parsed.jsonfile
 targetPath = parsed.filepath
 appendMode = parsed.append
+overwriteMode = parsed.overwrite
 amount = parsed.amount
 
 # validate input arguments and create resulting objects
 r = RandomWord()
 targetPath = targetPath or r.word() + "_" + r.word() + "_" + r.word() + ".sql"
-filemode = "a" if appendMode else "x"
+filemode = "w" if overwriteMode else "a" if appendMode else "x"
 fake = Faker(localization)
 
 with open(jsonPath, 'r') as jsonfile:

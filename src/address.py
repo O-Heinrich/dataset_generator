@@ -6,4 +6,4 @@ class Address:
         self.town = town
 
     def streetHousenumber(self):
-        return self.street + self.housenumber
+        return self.street + " " + self.housenumber

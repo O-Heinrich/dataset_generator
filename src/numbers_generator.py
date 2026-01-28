@@ -30,7 +30,7 @@ def generateDateTime(fake):
 def generateDateTimeList(fake, size, unique=False, maxUniqueFailsMultiplier=3):
     if not isinstance(fake, Faker):
         raise TypeError()
-    return generateRandomList(lambda: str(fake.date_time), size, unique, maxUniqueFailsMultiplier)
+    return generateRandomList(lambda: str(fake.date_time()), size, unique, maxUniqueFailsMultiplier)
 
 def generateFloat(start, stop=None, accuracy=100):
     min = int(start * accuracy)

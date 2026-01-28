@@ -1,4 +1,8 @@
 /generator_venv/
 /.idea/
 /src/__pycache__/
+
+# Ignore most input and output files
 *.sql
+*.json
+!example.json
