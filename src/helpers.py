@@ -13,3 +13,9 @@ def generateRandomList(randomGenerator, size, unique=False, maxUniqueFailsMultip
         if count > size * maxUniqueFailsMultiplier:
             raise TooManyUniqueFailsException()
     return list(result)
+
+def stringify(thing):
+    if isinstance(thing, str):
+        return f'"{thing}"'
+    else:
+        return str(thing)

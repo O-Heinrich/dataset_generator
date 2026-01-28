@@ -1,5 +1,6 @@
 from faker import Faker
 from column import Column
+from helpers import stringify
 
 class SqlModel:
     def __init__(self, fake, tablename, columns):
@@ -19,6 +20,6 @@ class SqlModel:
         for data in generatedData:
             for s, d in zip(columnSortedData, data):
                 s.append(d)
-        query += ",\n".join(["(" + ", ".join(map(str, dataset)) + ")" for dataset in columnSortedData])
+        query += ",\n".join(["(" + ", ".join(map(stringify, dataset)) + ")" for dataset in columnSortedData])
         query += ";"
         return query

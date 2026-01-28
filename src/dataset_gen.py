@@ -8,12 +8,14 @@ from datatypes import Datatype as Dt
 parser = argparse.ArgumentParser()
 
 parser.add_argument('-l', action="store", dest="location", default="de_DE")
+parser.add_argument('-e', action="store", dest="encoding", default="utf-8")
 parser.add_argument('-p', action="store", dest="jsonfile", default="")
 parser.add_argument('-f', action="store", dest="filepath", default="")
 parser.add_argument('-a', action="store_true", dest="append", default=False)
 
 parsed = parser.parse_args()
 localization = parsed.location
+encoding = parsed.encoding
 jsonPath = parsed.jsonfile
 targetPath = parsed.filepath
 # TODO: validate path
@@ -31,7 +33,7 @@ columns = [
 
 model = SqlModel(fake, "dbname", columns)
 
-file = open("test.txt", "w")
+file = open("test.sql", "w", encoding=encoding)
 query = model.generate(20)
 file.write(query)
 file.close()
