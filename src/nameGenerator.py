@@ -1,5 +1,5 @@
 from faker import Faker
-from generators.helpers import generateRandomList
+from helpers import generateRandomList
 
 def generateFirstName(fake):
     if not isinstance(fake, Faker):

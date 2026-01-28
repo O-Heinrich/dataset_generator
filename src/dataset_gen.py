@@ -1,5 +1,8 @@
 from faker import Faker
 import argparse
+from sql_model import SqlModel
+from column import Column
+from datatypes import Datatype as Dt
 
 # allow parsing arguments on commmand line
 parser = argparse.ArgumentParser()
@@ -17,3 +20,18 @@ targetPath = parsed.filepath
 appendMode = parsed.append
 
 fake = Faker(localization)
+
+columns = [
+    Column("id", Dt.PRIMARY_KEY),
+    Column("value", Dt.INTEGER, {"max":100}),
+    Column("name", Dt.FULL_NAME),
+    Column("date", Dt.DATE),
+    Column("plz", Dt.PLZ)
+]
+
+model = SqlModel(fake, "dbname", columns)
+
+file = open("test.txt", "w")
+query = model.generate(20)
+file.write(query)
+file.close()

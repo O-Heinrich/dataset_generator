@@ -1,4 +1,4 @@
-from generators.exceptions import TooManyUniqueFailsException
+from exceptions import TooManyUniqueFailsException
 
 def generateRandomList(randomGenerator, size, unique=False, maxUniqueFailsMultiplier=3):
     if not callable(randomGenerator):

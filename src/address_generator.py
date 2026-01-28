@@ -1,8 +1,8 @@
 from faker import Faker
-from generators.helpers import generateRandomList
+from helpers import generateRandomList
 import re
-from generators.exceptions import InvalidGenerationException
-from generators.address import Address
+from exceptions import InvalidGenerationException
+from address import Address
 
 def generateCompanyName(fake):
     if not isinstance(fake, Faker):
@@ -14,7 +14,7 @@ def generateCompanyNameList(fake, size, unique=False, maxUniqueFailsMultiplier=3
         raise TypeError()
     return generateRandomList(lambda: fake.company(), size, unique, maxUniqueFailsMultiplier)
 
-addressReg = r'^(.*) (\d+)\n(\d{5}) (.*?)\s*$'
+addressReg = r'^(.*) (\d+(?:[\-/]\d+|[a-z])?)\n(\d{5}) (.*?)\s*$'
 
 def generateAddress(fake):
     if not isinstance(fake, Faker):
@@ -33,6 +33,6 @@ def generateAddressList(fake, size):
         address = fake.address()
         matcher = re.match(addressReg, address)
         if not matcher:
-            raise InvalidGenerationException()
+            raise InvalidGenerationException(address + " is not a valid address")
         addresses.append(Address(matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4)))
     return addresses

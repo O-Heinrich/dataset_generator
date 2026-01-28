@@ -14,11 +14,11 @@ class SqlModel:
         query += ", ".join([c.name for c in self.columns])
         query += ")\nVALUES\n"
         
-        generatedData = [c.getListGenerator()(amount) for c in self.columns]
+        generatedData = [c.getListGenerator(self.fake)(amount) for c in self.columns]
         columnSortedData = [[] for _ in range(amount)]
         for data in generatedData:
             for s, d in zip(columnSortedData, data):
                 s.append(d)
-        query += ",\n".join(["(" + ", ".join(dataset) + ")" for dataset in columnSortedData])
+        query += ",\n".join(["(" + ", ".join(map(str, dataset)) + ")" for dataset in columnSortedData])
         query += ";"
         return query

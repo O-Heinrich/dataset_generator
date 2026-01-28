@@ -1,5 +1,5 @@
 from faker import Faker
-from generators.helpers import generateRandomList
+from helpers import generateRandomList
 import random
 
 def generateDate(fake):

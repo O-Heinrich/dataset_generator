@@ -1,9 +1,9 @@
 from faker import Faker
 from wonderwords import RandomWord
 from datatypes import Datatype as Dt
-import generators.nameGenerator as ng
-import generators.address_generator as ag
-import generators.numbers_generator as numg
+import nameGenerator as ng
+import address_generator as ag
+import numbers_generator as numg
 import random
 from rstr import xeger
 
@@ -17,7 +17,7 @@ class Column:
         self.type = type
         self.metadata = metadata
         if type == Dt.PRIMARY_KEY and not Column.nextkey in self.metadata:
-            self.metadata.put(Column.nextkey, 0)
+            self.metadata[Column.nextkey] = 0
 
     def getGenerator(self, fake):
         if not isinstance(fake, Faker):
@@ -155,5 +155,5 @@ class Column:
         id = self.metadata.get(Column.nextkey)
         if id is None:
             raise ValueError("No ID given")
-        self.metadata.put(Column.nextkey, id + amount)
+        self.metadata[Column.nextkey] += amount
         return [i for i in range(id, id + amount)]
