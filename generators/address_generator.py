@@ -25,7 +25,14 @@ def generateAddress(fake):
         raise InvalidGenerationException()
     return Address(matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4))
 
-def generateCompanyNameList(fake, size, unique=False, maxUniqueFailsMultiplier=3):
+def generateCompanyNameList(fake, size):
     if not isinstance(fake, Faker):
         raise TypeError()
-    return generateRandomList(lambda: generateAddress(fake), size, unique, maxUniqueFailsMultiplier)
+    addresses = []
+    for _ in range(size):
+        address = fake.address()
+        matcher = re.match(addressReg, address)
+        if not matcher:
+            raise InvalidGenerationException()
+        addresses.append(Address(matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4)))
+    return addresses
