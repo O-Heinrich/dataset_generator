@@ -4,3 +4,6 @@ class Address:
         self.housenumber = int(housenumber)
         self.plz = plz
         self.town = town
+
+    def streetHousenumber(self):
+        return self.street + str(self.housenumber)

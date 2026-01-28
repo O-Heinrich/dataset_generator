@@ -25,7 +25,7 @@ def generateAddress(fake):
         raise InvalidGenerationException()
     return Address(matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4))
 
-def generateCompanyNameList(fake, size):
+def generateAddressList(fake, size):
     if not isinstance(fake, Faker):
         raise TypeError()
     addresses = []
