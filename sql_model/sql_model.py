@@ -1,8 +1,9 @@
 from faker import Faker
+from column import Column
 
 class SqlModel:
     def __init__(self, fake, tablename, columns):
-        if not isinstance(fake, Faker) or not isinstance(columns, list):
+        if not isinstance(fake, Faker) or not isinstance(columns, list) or not all(isinstance(c, Column) for c in columns):
             raise TypeError()
         self.fake = fake
         self.columns = columns
@@ -13,4 +14,11 @@ class SqlModel:
         query += ", ".join([c.name for c in self.columns])
         query += ")\nVALUES\n"
         
-        pass
+        generatedData = [c.getListGenerator()(amount) for c in self.columns]
+        columnSortedData = [[] for _ in range(amount)]
+        for data in generatedData:
+            for s, d in zip(columnSortedData, data):
+                s.append(d)
+        query += ",\n".join(["(" + ", ".join(dataset) + ")" for dataset in columnSortedData])
+        query += ";"
+        return query
