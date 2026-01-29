@@ -70,4 +70,16 @@ Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder
 | TOWN | Stadtname | | | |
 | PLZ | Postleitzahl, als String | | | |
 | MONEY | Gleitkommazahl mit 2 Nachkommastellen | min | 0 | Kleinster mögliche Wert (inklusiv) |
-| | | max | | required - Höchster mögliche Wert (exclusiv) |
+| | | max | | required - Höchster mögliche Wert (exclusiv), muss größer als min sein |
+| FLOAT | Gleitkommazahl mit variable Anzahl Nachkommastellen | min | 0 | Siehe MONEY |
+| | | max | | Siehe MONEY |
+| | | acc | 100 | Angabe zu Anzahl Nachkommastellen (z. B. 100 -> 2 Nachkommastellen) |
+| INTEGER | Ganzzahl | min | 0 | Siehe MONEY |
+| | | max | | Siehe MONEY |
+| DATE | Datum im üblichen SQL-Format (YYYY-MM-DD) | | | |
+| TIME | Uhrzeit im üblichen SQL-Format (HH:MI:SS) | | | |
+| DATE_TIME | Datum und Uhrzeit im üblichen SQL-Format (YYYY-MM-DD HH:MI:SS) | | | |
+| VALUES | Zufälliger Wert aus einer Auswahl an Werten | values | | required - Array an möglichen Werten, darf nicht leer sein |
+| FORMAT_STRING | String, der dem angegebenen regex matched | regex | | required - regex, dem der zufällige String matchen soll |
+| RANDOM_STRING | Zufälliges englisches Wort | | | |
+| PRIMARY_KEY | Integer ID, welche bei jedem Datensatz hochgezählt wird | nextkey | 0 | Erster zu verteilende ID |

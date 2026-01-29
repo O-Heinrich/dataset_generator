@@ -133,7 +133,7 @@ class Column:
             return lambda size: numg.generateDateTimeList(fake, size, unique, maxUniqueFailsMultiplier)
         elif self.type == Dt.VALUES:
             values = self.metadata.get("values")
-            if values is None or not isinstance(values, list):
+            if values is None or not isinstance(values, list) or len(values) < 1:
                 raise ValueError("For Values Type there must be metadata for the values")
             return lambda size: [values[random.randrange(len(values))] for _ in range(size)]
         elif self.type == Dt.FORMAT_STRING:
