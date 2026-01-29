@@ -76,9 +76,12 @@ Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder
 | | | acc | 100 | Angabe zu Anzahl Nachkommastellen (z. B. 100 -> 2 Nachkommastellen) |
 | INTEGER | Ganzzahl | min | 0 | Siehe MONEY |
 | | | max | | Siehe MONEY |
-| DATE | Datum im üblichen SQL-Format (YYYY-MM-DD) | | | |
-| TIME | Uhrzeit im üblichen SQL-Format (HH:MI:SS) | | | |
-| DATE_TIME | Datum und Uhrzeit im üblichen SQL-Format (YYYY-MM-DD HH:MI:SS) | | | |
+| DATE | Datum im üblichen SQL-Format (YYYY-MM-DD) | unique | false | siehe FIRST_NAME |
+| | | mufm | 3 | siehe FIRST_NAME |
+| TIME | Uhrzeit im üblichen SQL-Format (HH:MI:SS) | unique | false | siehe FIRST_NAME |
+| | | mufm | 3 | siehe FIRST_NAME |
+| DATE_TIME | Datum und Uhrzeit im üblichen SQL-Format (YYYY-MM-DD HH:MI:SS) | unique | false | siehe FIRST_NAME |
+| | | mufm | 3 | siehe FIRST_NAME |
 | VALUES | Zufälliger Wert aus einer Auswahl an Werten | values | | required - Array an möglichen Werten, darf nicht leer sein |
 | FORMAT_STRING | String, der dem angegebenen regex matched | regex | | required - regex, dem der zufällige String matchen soll |
 | RANDOM_STRING | Zufälliges englisches Wort | | | |

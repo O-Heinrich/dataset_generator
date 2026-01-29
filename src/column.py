@@ -112,7 +112,8 @@ class Column:
         elif self.type == Dt.PLZ:
             return lambda size: [c.plz for c in ag.generateAddressList(fake, size)]
         elif self.type == Dt.FULL_ADDRESS:
-            return lambda size: ag.generateAddressList(fake, size)
+            raise NotImplementedError()
+            #return lambda size: ag.generateAddressList(fake, size)
         elif self.type == Dt.MONEY:
             if max is None:
                 raise ValueError("Max value is missing")
