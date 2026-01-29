@@ -13,6 +13,14 @@ generator_venv/bin/pip install rstr
 
 ## Usage
 
+Wenn noch nicht geschehen muss die virtuelle environment aktiviert werden:
+
+```console
+./generator_venv/bin/activate
+```
+
+Das script kann mit folgendem Befehlt ausgeführt werden:
+
 ```console
 python src/dataset_gen.py
 ```
@@ -56,6 +64,7 @@ Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder
 
 | Typ | Beschreibung | Parameter | Default | Beschreibung |
 | - | - | - | - | - |
+| PRIMARY_KEY | Integer ID, welche bei jedem Datensatz hochgezählt wird | nextkey | 0 | Erster zu verteilende ID |
 | FIRST_NAME | Vorname mit evtl Titel | unique | false | Wenn true, keine doppelten Namen werden generiert |
 | | | mufm | 3 | Wenn unique true ist, limitiert Anzahl der Versuche auf mufm * n, um Endlosschleifen zu verhindern |
 | LAST_NAME | Nachname | unique | false | siehe FIRST_NAME |
@@ -82,7 +91,6 @@ Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder
 | | | mufm | 3 | siehe FIRST_NAME |
 | DATE_TIME | Datum und Uhrzeit im üblichen SQL-Format (YYYY-MM-DD HH:MI:SS) | unique | false | siehe FIRST_NAME |
 | | | mufm | 3 | siehe FIRST_NAME |
-| VALUES | Zufälliger Wert aus einer Auswahl an Werten | values | | required - Array an möglichen Werten, darf nicht leer sein |
+| VALUES | Zufälliger Wert aus einer Auswahl an Werten | values | | required - Array an möglichen Werten, darf nicht leer sein. Wiederholte Werte erhöht die Wahrscheinlichkeit entsprechend |
 | FORMAT_STRING | String, der dem angegebenen regex matched | regex | | required - regex, dem der zufällige String matchen soll |
 | RANDOM_STRING | Zufälliges englisches Wort | | | |
-| PRIMARY_KEY | Integer ID, welche bei jedem Datensatz hochgezählt wird | nextkey | 0 | Erster zu verteilende ID |

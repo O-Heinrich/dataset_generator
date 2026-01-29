@@ -18,22 +18,30 @@
         "address_town": "TOWN",
         "address_plz": "PLZ",
         "some_place": "STREET_HOUSENUMBER",
-        "price": "MONEY",
+        "price": {
+            "type": "MONEY",
+            "max": 1000
+        },
         "discount": {
             "type": "FLOAT",
-            "max": "0.5"
+            "max": 0.5,
+            "acc": 10
         },
         "amount": {
             "type": "INTEGER",
             "min": 1,
             "max": 50
         },
-        "date": "DATE",
-        "time": "TIME",
+        "somedate": "DATE",
+        "sometime": "TIME",
         "somedatetime": "DATE_TIME",
         "category": {
             "type": "VALUES",
-            "values": ["Category A", "Category B", "Category C"]
+            "values": [
+                "Category A",
+                "Category B",
+                "Category C"
+            ]
         },
         "somestringthing": {
             "type": "FORMAT_STRING",
@@ -41,5 +49,5 @@
         },
         "word": "RANDOM_STRING"
     },
-    "amount": 500
+    "amount": 100
 }

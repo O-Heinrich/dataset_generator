@@ -39,7 +39,7 @@ def generateFloat(start, stop=None, accuracy=100):
         min = 0
     else:
         if not (isinstance(stop, float) or isinstance(stop, int)):
-            raise TypeError()
+            raise TypeError(f'Stop must be a number but was a {type(stop)}')
         if stop < start:
             raise ValueError("The stop value cannot be higher than the start value")
         max = int(stop * accuracy)
