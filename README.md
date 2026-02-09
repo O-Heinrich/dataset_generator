@@ -125,7 +125,8 @@ Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder
 | | | acc | 100 | Angabe zu Anzahl Nachkommastellen (z. B. 100 -> 2 Nachkommastellen) |
 | INTEGER | Ganzzahl | min | 0 | Siehe MONEY |
 | | | max | | Siehe MONEY |
-| DATE | Datum im üblichen SQL-Format (YYYY-MM-DD) | | | |
+| DATE | Datum im üblichen SQL-Format (YYYY-MM-DD) | start | "-99y" | Frühestes mögliches Datum (inklusiv). Mögliche String Formate: <ul><li>"now" oder "today"</li><li>Datum im Format wie "1970-01-01" (inklusive führende nullen)</li><li>+ oder -, gefolgt von einer Zahl und d, w oder y für (day, week, year) um Abstand zum jetzigen Zeitpunkt anzugeben. Z. B. "+3y", "-5d"...</li></ul> |
+| | | end | "now" | Spätestes mögliches Datum (exklusiv). Format siehe start |
 | TIME | Uhrzeit im üblichen SQL-Format (HH:MI:SS) | | | |
 | DATE_TIME | Datum und Uhrzeit im üblichen SQL-Format (YYYY-MM-DD HH:MI:SS) | | | |
 | VALUES | Zufälliger Wert aus einer Auswahl an Werten | values | | required - Array an möglichen Werten, darf nicht leer sein. Wiederholte Werte erhöht die Wahrscheinlichkeit entsprechend |

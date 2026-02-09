@@ -10,7 +10,6 @@ class Datatype(Enum):
     HOUSENUMBER = 19
     TOWN = 7
     PLZ = 8
-    FULL_ADDRESS = 18 # UNSUPPORTED
     MONEY = 9
     INTEGER = 10
     FLOAT = 11

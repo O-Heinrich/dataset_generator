@@ -6,6 +6,8 @@ import address_generator as ag
 import numbers_generator as numg
 import random
 from rstr import xeger
+import re
+import datetime
 
 class Column:
     nextkey = "nextkey"
@@ -19,71 +21,6 @@ class Column:
         if type == Dt.PRIMARY_KEY and not Column.nextkey in self.metadata:
             self.metadata[Column.nextkey] = 0
 
-    def getGenerator(self, fake):
-        if not isinstance(fake, Faker):
-            raise TypeError()
-        min = self.metadata.get("min", 0)
-        max = self.metadata.get("max")
-        acc = self.metadata.get("acc", 100)
-
-        if self.type == Dt.FIRST_NAME:
-            return lambda: ng.generateFirstName(fake)
-        elif self.type == Dt.LAST_NAME:
-            return lambda: ng.generateLastName(fake)
-        elif self.type == Dt.FULL_NAME:
-            return lambda: ng.generateFullName(fake)
-        elif self.type == Dt.COMPANY_NAME:
-            return lambda: ag.generateCompanyName(fake)
-        elif self.type == Dt.STREET:
-            return lambda: ag.generateAddress(fake).street
-        elif self.type == Dt.STREET_HOUSENUMBER:
-            return lambda: ag.generateAddress(fake).streetHousenumber()
-        elif self.type == Dt.HOUSENUMBER:
-            return lambda: ag.generateAddress(fake).housenumber
-        elif self.type == Dt.TOWN:
-            return lambda: ag.generateAddress(fake).town
-        elif self.type == Dt.PLZ:
-            return lambda: ag.generateAddress(fake).plz
-        elif self.type == Dt.FULL_ADDRESS:
-            return lambda: ag.generateAddress(fake)
-        elif self.type == Dt.MONEY:
-            if max is None:
-                raise ValueError("Max value is missing")
-            return lambda: numg.generateFloat(min, max)
-        elif self.type == Dt.INTEGER:
-            if max is None:
-                raise ValueError("Max value is missing")
-            return lambda: random.randrange(min, max)
-        elif self.type == Dt.FLOAT:
-            if max is None:
-                raise ValueError("Max value is missing")
-            return lambda: numg.generateFloat(min, max, acc)
-        elif self.type == Dt.DATE:
-            return lambda: numg.generateDate(fake)
-        elif self.type == Dt.TIME:
-            return lambda: numg.generateTime(fake)
-        elif self.type == Dt.DATE_TIME:
-            return lambda: numg.generateDateTime(fake)
-        elif self.type == Dt.VALUES:
-            values = self.metadata.get("values")
-            if values is None or not isinstance(values, list):
-                raise ValueError("For Values Type there must be metadata for the values")
-            return lambda: values[random.randrange(len(values))]
-        elif self.type == Dt.FORMAT_STRING:
-            reg = self.metadata.get("regex")
-            if reg is None:
-                raise ValueError("No Regex given")
-            return lambda: xeger(reg)
-        elif self.type == Dt.RANDOM_STRING:
-            r = RandomWord()
-            return lambda: r.word()
-        elif self.type == Dt.PRIMARY_KEY:
-            return lambda: self.getNextKeys()[0]
-        elif self.type == Dt.FOREIGN_KEY:
-            raise NotImplementedError()
-        else:
-            raise NotImplementedError()
-
     def getListGenerator(self, fake):
         if not isinstance(fake, Faker):
             raise TypeError()
@@ -92,6 +29,13 @@ class Column:
         min = self.metadata.get("min", 0)
         max = self.metadata.get("max")
         acc = self.metadata.get("acc", 100)
+        dateReg = r'^\d{4}\-\d\d\-\d\d$'
+        start = self.metadata.get("start", "-99y")
+        end = self.metadata.get("end", "now")
+        if re.match(dateReg, start):
+            start = datetime.datetime.strptime(start, "%Y-%m-%d").date()
+        if re.match(dateReg, end):
+            end = datetime.datetime.strptime(end, "%Y-%m-%d").date()
         
         if self.type == Dt.FIRST_NAME:
             return lambda size: ng.generateFirstNameList(fake, size, unique, maxUniqueFailsMultiplier)
@@ -111,9 +55,6 @@ class Column:
             return lambda size: [c.town for c in ag.generateAddressList(fake, size)]
         elif self.type == Dt.PLZ:
             return lambda size: [c.plz for c in ag.generateAddressList(fake, size)]
-        elif self.type == Dt.FULL_ADDRESS:
-            raise NotImplementedError()
-            #return lambda size: ag.generateAddressList(fake, size)
         elif self.type == Dt.MONEY:
             if max is None:
                 raise ValueError("Max value is missing")
@@ -127,7 +68,7 @@ class Column:
                 raise ValueError("Max value is missing")
             return lambda size: numg.generateFloatList(size, min, max, acc)
         elif self.type == Dt.DATE:
-            return lambda size: numg.generateDateList(fake, size, unique, maxUniqueFailsMultiplier)
+            return lambda size: numg.generateDateList(fake, size, unique, maxUniqueFailsMultiplier, start=start, end=end)
         elif self.type == Dt.TIME:
             return lambda size: numg.generateTimeList(fake, size, unique, maxUniqueFailsMultiplier)
         elif self.type == Dt.DATE_TIME:

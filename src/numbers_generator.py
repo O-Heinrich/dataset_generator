@@ -2,15 +2,15 @@ from faker import Faker
 from helpers import generateRandomList
 import random
 
-def generateDate(fake):
+def generateDate(fake, start='-99y', end='today'):
     if not isinstance(fake, Faker):
         raise TypeError()
-    return fake.date()
+    return fake.date_between(start_date=start, end_date=end).strftime("%Y-%m-%d")
 
-def generateDateList(fake, size, unique=False, maxUniqueFailsMultiplier=3):
+def generateDateList(fake, size, unique=False, maxUniqueFailsMultiplier=3, start='-99y', end='today'):
     if not isinstance(fake, Faker):
         raise TypeError()
-    return generateRandomList(lambda: fake.date(), size, unique, maxUniqueFailsMultiplier)
+    return generateRandomList(lambda: fake.date_between(start_date=start, end_date=end).strftime("%Y-%m-%d"), size, unique, maxUniqueFailsMultiplier)
 
 def generateTime(fake):
     if not isinstance(fake, Faker):
