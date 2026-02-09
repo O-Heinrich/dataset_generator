@@ -1,11 +1,33 @@
 # dataset_generator
 
-Script zum Generieren von Beispiel-Datensätzen für relationale Datenbanken
+Dies ist ein Script zum Generieren von Beispiel-Datensätzen für relationale Datenbanken. Es nimmt eine json Konfigurationsdatei entgegen und schreibt einen SQL-Befehl in eine Datei.
 
 ## Setup
 
+Es wird vorrausgesetzt, dass Python sowie Python venv installiert ist.
+
 ```console
 python -m venv generator_venv
+generator_venv/bin/pip install wonderwords
+generator_venv/bin/pip install Faker
+generator_venv/bin/pip install rstr
+```
+
+### Linux
+
+```bash
+python3 -m venv generator_venv
+source generator_venv/bin/activate
+generator_venv/bin/pip install wonderwords
+generator_venv/bin/pip install Faker
+generator_venv/bin/pip install rstr
+```
+
+### Powershell
+
+```powershell
+python -m venv generator_venv
+./generator_venv/bin/Activate.ps1
 generator_venv/bin/pip install wonderwords
 generator_venv/bin/pip install Faker
 generator_venv/bin/pip install rstr
@@ -17,6 +39,12 @@ Wenn noch nicht geschehen muss die virtuelle environment aktiviert werden:
 
 ```console
 ./generator_venv/bin/activate
+```
+
+Beziehungsweise unter Powershell:
+
+```powershell
+./generator_venv/bin/Activate.ps1
 ```
 
 Das script kann mit folgendem Befehlt ausgeführt werden:
@@ -48,6 +76,22 @@ Die Konfiguration geschieht über eine json dabei, in welcher der Name der Tabel
 | columns | Map | required | Repräsentation der Spalten der Tabelle und ihrer Typen. Siehe [Columns](#columns) |
 | amount | int | optional | Anzahl der für diese Tabelle zu generierenden Datensätze. Überschreibt die -n Option |
 
+Zum Beispiel:
+
+```json
+{
+    "db_name": "tabelle",
+    "columns": {
+        "feldname1": "FULL_NAME",
+        "feldname2": {
+            "type": "INTEGER",
+            "max": 10000
+        }
+    },
+    "amount": 1000
+}
+```
+
 #### Columns
 
 Das Columns Feld enthält die Namen der Spalten als Schlüssel und die Beschreibung des jeweiligen Datentyps als Wert. Zum Beispiel:
@@ -65,14 +109,10 @@ Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder
 | Typ | Beschreibung | Parameter | Default | Beschreibung |
 | - | - | - | - | - |
 | PRIMARY_KEY | Integer ID, welche bei jedem Datensatz hochgezählt wird | nextkey | 0 | Erster zu verteilende ID |
-| FIRST_NAME | Vorname mit evtl Titel | unique | false | Wenn true, keine doppelten Namen werden generiert |
-| | | mufm | 3 | Wenn unique true ist, limitiert Anzahl der Versuche auf mufm * n, um Endlosschleifen zu verhindern |
-| LAST_NAME | Nachname | unique | false | siehe FIRST_NAME |
-| | | mufm | 3 | siehe FIRST_NAME |
-| FULL_NAME | Vor- und Nachname | unique | false | siehe FIRST_NAME |
-| | | mufm | 3 | siehe FIRST_NAME |
-| COMPANY_NAME | vollständiger Name für ein Unternehmen | unique | false | siehe FIRST_NAME |
-| | | mufm | 3 | siehe FIRST_NAME |
+| FIRST_NAME | Vorname mit evtl Titel | | | |
+| LAST_NAME | Nachname | | | |
+| FULL_NAME | Vor- und Nachname | | | |
+| COMPANY_NAME | vollständiger Name für ein Unternehmen | | | |
 | STREET | Straßenname, ohne Hausnummer | | | |
 | STREET_HOUSENUMBER | Straßenname, mit Hausnummer | | | |
 | HOUSENUMBER | Hausnummer, als String | | | |
@@ -85,12 +125,9 @@ Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder
 | | | acc | 100 | Angabe zu Anzahl Nachkommastellen (z. B. 100 -> 2 Nachkommastellen) |
 | INTEGER | Ganzzahl | min | 0 | Siehe MONEY |
 | | | max | | Siehe MONEY |
-| DATE | Datum im üblichen SQL-Format (YYYY-MM-DD) | unique | false | siehe FIRST_NAME |
-| | | mufm | 3 | siehe FIRST_NAME |
-| TIME | Uhrzeit im üblichen SQL-Format (HH:MI:SS) | unique | false | siehe FIRST_NAME |
-| | | mufm | 3 | siehe FIRST_NAME |
-| DATE_TIME | Datum und Uhrzeit im üblichen SQL-Format (YYYY-MM-DD HH:MI:SS) | unique | false | siehe FIRST_NAME |
-| | | mufm | 3 | siehe FIRST_NAME |
+| DATE | Datum im üblichen SQL-Format (YYYY-MM-DD) | | | |
+| TIME | Uhrzeit im üblichen SQL-Format (HH:MI:SS) | | | |
+| DATE_TIME | Datum und Uhrzeit im üblichen SQL-Format (YYYY-MM-DD HH:MI:SS) | | | |
 | VALUES | Zufälliger Wert aus einer Auswahl an Werten | values | | required - Array an möglichen Werten, darf nicht leer sein. Wiederholte Werte erhöht die Wahrscheinlichkeit entsprechend |
 | FORMAT_STRING | String, der dem angegebenen regex matched | regex | | required - regex, dem der zufällige String matchen soll |
 | RANDOM_STRING | Zufälliges englisches Wort | | | |
