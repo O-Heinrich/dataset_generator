@@ -51,21 +51,12 @@ with open(jsonPath, 'r') as jsonfile:
 model = SqlModel(fake, dbname, columns)
 
 # generate datasets and write them into a file
-file = open(targetPath, filemode, encoding=encoding)
-try:
-    query = model.generate(amount)
-except exceptions.TooManyUniqueFailsException as e:
-    print("Failed to generate data because not enough unique values could be generated")
-    file.close()
-    if filemode == "x":
-        print("removing created file")
-        os.remove(targetPath)
-except (TypeError, ValueError) as e:
+try: 
+    with open(targetPath, filemode, encoding=encoding) as file:
+        query = model.generate(amount)
+        file.write(query)
+except (exceptions.TooManyUniqueFailsException, TypeError, ValueError) as e:
     print(e)
-    file.close()
     if filemode == "x":
         print("removing created file")
         os.remove(targetPath)
-else:
-    file.write(query)
-    file.close()
