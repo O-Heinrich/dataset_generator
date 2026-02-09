@@ -90,6 +90,15 @@ class Column:
             return lambda size: self.getNextKeys(size)
         elif self.type == Dt.FOREIGN_KEY:
             raise NotImplementedError()
+        
+        elif self.type == Dt.ASCENDING:
+            allType = Dt[self.metadata.get("alltype")]
+            amount = len(self.metadata.get("names"))
+            reverse = self.metadata.get("reverse", False)
+            if allType == Dt.DATE:
+                return lambda size: numg.generateAscendingDatesList(fake, size, amount, start=start, end=end, reverse=reverse)
+            raise NotImplementedError()
+
         else:
             raise NotImplementedError()
         
@@ -99,3 +108,8 @@ class Column:
             raise ValueError("No ID given")
         self.metadata[Column.nextkey] += amount
         return [i for i in range(id, id + amount)]
+    
+    def __str__(self):
+        if self.type.value >= 1000:
+            return ", ".join(self.metadata.get("names"))
+        return self.name

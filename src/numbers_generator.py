@@ -12,6 +12,23 @@ def generateDateList(fake, size, unique=False, maxUniqueFailsMultiplier=3, start
         raise TypeError()
     return generateRandomList(lambda: fake.date_between(start_date=start, end_date=end).strftime("%Y-%m-%d"), size, unique, maxUniqueFailsMultiplier)
 
+def generateAscendingDates(fake, amount, start='-99y', end='today', reverse=False):
+    if not isinstance(fake, Faker):
+        raise TypeError()
+    l = []
+    last = start
+    for _ in range(amount):
+        last = fake.date_between(start_date=last, end_date=end)
+        l.append(last.strftime("%Y-%m-%d"))
+    if reverse:
+        return list(reversed(l))
+    return l
+
+def generateAscendingDatesList(fake, size, amount, start='-99y', end='today', reverse=False):
+    if not isinstance(fake, Faker):
+        raise TypeError()
+    return generateRandomList(lambda: generateAscendingDates(fake, amount, start, end, reverse), size)
+
 def generateTime(fake):
     if not isinstance(fake, Faker):
         raise TypeError()

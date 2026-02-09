@@ -21,3 +21,6 @@ class Datatype(Enum):
     RANDOM_STRING = 17
     PRIMARY_KEY = 20
     FOREIGN_KEY = 21 # UNSUPPORTED
+
+    # Types for multiple dependend fields. Logic accounts for these to have values >= 1000
+    ASCENDING = 1001

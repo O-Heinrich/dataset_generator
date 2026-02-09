@@ -47,13 +47,15 @@ Beziehungsweise unter Powershell:
 ./generator_venv/bin/Activate.ps1
 ```
 
-Das script kann mit folgendem Befehlt ausgeführt werden:
+Das script kann mit folgendem Befehl ausgeführt werden:
 
 ```console
 python src/dataset_gen.py
 ```
 
 ### Options
+
+Folgende Optionen können an den Befehl angehangen werden:
 
 | Option | Beschreibung | Default Behavior |
 | - | - | - |
@@ -68,7 +70,7 @@ python src/dataset_gen.py
 
 ### Config
 
-Die Konfiguration geschieht über eine json dabei, in welcher der Name der Tabelle sowie die Art der zu generierenden Daten festgelegt werden kann. Beispielhaft siehe example.json. Die json hat folgende Felder:
+Die Konfiguration geschieht dabei über eine json Datei, in welcher der Name der Tabelle sowie die Art der zu generierenden Daten festgelegt werden kann. Beispielhaft siehe example.json. Die json hat folgende Felder:
 
 | Feldname | Typ | | Beschreibung |
 | - | - | - | - |
@@ -132,3 +134,19 @@ Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder
 | VALUES | Zufälliger Wert aus einer Auswahl an Werten | values | | required - Array an möglichen Werten, darf nicht leer sein. Wiederholte Werte erhöht die Wahrscheinlichkeit entsprechend |
 | FORMAT_STRING | String, der dem angegebenen regex matched | regex | | required - regex, dem der zufällige String matchen soll |
 | RANDOM_STRING | Zufälliges englisches Wort | | | |
+
+Für logisch voneinander abhängige Spalten können die folgenden Typen verwendet werden. Die Benennung dieser Typen ist egal, und es wird immer eine map als Wert benötigt, welche immer den Typen ("type") und eine Liste der Spaltennamen ("names") enthält. Zum Beispiel:
+
+```json
+"xxx": {
+    "type": "ASCENDING",
+    "names": ["feld1", "feld2", "feld3"]
+}
+```
+
+| Typ | Beschreibung | Parameter | Default | Beschreibung |
+| - | - | - | - | - |
+| ASCENDING | Generiert zufällige Werte und garantiert, dass diese aufsteigend (nicht strikt aufsteigend) sind | alltype | | required - Typ, von welchem die einzelnen Felder sind. Alle Felder erhalten denselben Typ. Zurzeit unterstützt: "DATE" |
+| | | reverse | false | Wenn true, werden die Felder absteigend statt aufsteigend generiert |
+| | | start | "-99y" | siehe Date |
+| | | end | "now" | siehe Date |

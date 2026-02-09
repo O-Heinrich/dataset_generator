@@ -12,7 +12,7 @@ class SqlModel:
 
     def generate(self, amount=1):
         query = "INSERT INTO " + self.tablename + " ("
-        query += ", ".join([c.name for c in self.columns])
+        query += ", ".join([str(c) for c in self.columns])
         query += ")\nVALUES\n"
         
         generatedData = [c.getListGenerator(self.fake)(amount) for c in self.columns]

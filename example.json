@@ -51,7 +51,12 @@
             "type": "FORMAT_STRING",
             "regex": "[A-Z]\\-NR\\d{7}"
         },
-        "word": "RANDOM_STRING"
+        "word": "RANDOM_STRING",
+        "_": {
+            "type": "ASCENDING",
+            "names": ["first_date", "middle_date", "last_date"],
+            "alltype": "DATE"
+        }
     },
     "amount": 100
 }

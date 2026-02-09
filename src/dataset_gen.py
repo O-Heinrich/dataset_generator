@@ -7,6 +7,7 @@ from wonderwords import RandomWord
 import json
 import exceptions
 import os
+import traceback
 
 # allow parsing arguments on commmand line
 parser = argparse.ArgumentParser()
@@ -57,6 +58,7 @@ try:
         file.write(query)
 except (exceptions.TooManyUniqueFailsException, TypeError, ValueError) as e:
     print(e)
+    #print(traceback.format_exc())
     if filemode == "x":
         print("removing created file")
         os.remove(targetPath)

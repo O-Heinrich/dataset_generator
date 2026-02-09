@@ -14,8 +14,10 @@ def generateRandomList(randomGenerator, size, unique=False, maxUniqueFailsMultip
             raise TooManyUniqueFailsException()
     return list(result)
 
-def stringify(thing):
+def stringify(thing, sep=", "):
     if isinstance(thing, str):
         return f'"{thing}"'
+    elif isinstance(thing, list):
+        return sep.join([stringify(x) for x in thing])
     else:
         return str(thing)
