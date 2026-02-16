@@ -1,12 +1,15 @@
 from exceptions import TooManyUniqueFailsException
 
-def generateRandomList(randomGenerator, size, unique=False, maxUniqueFailsMultiplier=3):
-    if not callable(randomGenerator):
-        raise TypeError()
+from typing import Callable;
+from typing import Union;
+from typing import Any;
+
+def generateRandomList(randomGenerator: Callable[[], Any], size: int, unique: bool=False, maxUniqueFailsMultiplier: int=3) -> list[Any]:
     if not unique:
         return [randomGenerator() for _ in range(size)]
-    result = set()
-    count = 0
+
+    result: set[Any] = set()
+    count: int = 0
     while len(result) < size:
         result.add(randomGenerator())
         count += 1
@@ -14,10 +17,10 @@ def generateRandomList(randomGenerator, size, unique=False, maxUniqueFailsMultip
             raise TooManyUniqueFailsException()
     return list(result)
 
-def stringify(thing, sep=", "):
-    if isinstance(thing, str):
-        return f'"{thing}"'
-    elif isinstance(thing, list):
-        return sep.join([stringify(x) for x in thing])
+def stringify(any: Any, sep: str=", ") -> str:
+    if type(any) is str:
+        return f'"{any}"'
+    elif type(any) is list[Any]:
+        return sep.join([stringify(x) for x in any])
     else:
-        return str(thing)
+        return str(any)

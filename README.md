@@ -11,6 +11,7 @@ python -m venv generator_venv
 generator_venv/bin/pip install wonderwords
 generator_venv/bin/pip install Faker
 generator_venv/bin/pip install rstr
+generator_venv/bin/pip install mypy==1.18.2
 ```
 
 ### Linux
@@ -21,6 +22,7 @@ source generator_venv/bin/activate
 generator_venv/bin/pip install wonderwords
 generator_venv/bin/pip install Faker
 generator_venv/bin/pip install rstr
+generator_venv/bin/pip install mypy==1.18.2
 ```
 
 ### Powershell
@@ -31,6 +33,7 @@ python -m venv generator_venv
 generator_venv/bin/pip install wonderwords
 generator_venv/bin/pip install Faker
 generator_venv/bin/pip install rstr
+generator_venv/bin/pip install mypy==1.18.2
 ```
 
 ## Usage

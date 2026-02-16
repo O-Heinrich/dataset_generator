@@ -8,6 +8,26 @@ import json
 import exceptions
 import os
 import traceback
+import subprocess
+import os
+import platform
+
+# get python venv path
+python_path: str = ""
+if platform.system() == "Windows":
+    scripts_path: str = os.path.join(".", "generator_venv", "Scripts", "python.exe")
+    if os.path.exists(scripts_path):
+        python_path = scripts_path
+    else:
+        python_path = os.path.join(".", "generator_venv", "bin", "python.exe")
+else:
+    # assume linux, don't care about mac
+    python_path = os.path.join(".", "generator_venv", "bin", "python")
+
+# type check
+type_check_return_code: int = subprocess.call([python_path, "-m", "mypy", "--config-file", "./mypy.ini", "./src/"])
+if type_check_return_code != 0:
+    exit(type_check_return_code)
 
 # allow parsing arguments on commmand line
 parser = argparse.ArgumentParser()
@@ -21,14 +41,14 @@ parser.add_argument('-o', action="store_true", dest="overwrite", default=False)
 parser.add_argument('-n', action="store", dest="amount", type=int, default=20)
 
 # get input arguments
-parsed = parser.parse_args()
-localization = parsed.location
-encoding = parsed.encoding
-jsonPath = parsed.jsonfile
-targetPath = parsed.filepath
-appendMode = parsed.append
-overwriteMode = parsed.overwrite
-amount = parsed.amount
+parsed: argparse.Namespace = parser.parse_args()
+localization: str = parsed.location
+encoding: str = parsed.encoding
+jsonPath: str = parsed.jsonfile
+targetPath: str = parsed.filepath
+appendMode: str = parsed.append
+overwriteMode: str = parsed.overwrite
+amount: int = parsed.amount
 
 # validate input arguments and create resulting objects
 r = RandomWord()
@@ -38,8 +58,8 @@ fake = Faker(localization)
 
 with open(jsonPath, 'r') as jsonfile:
     data = json.load(jsonfile)
-    dbname = data["db_name"]
-    columns = []
+    dbname: str = data["db_name"]
+    columns: list[Column] = []
     for cName, cDesc in data["columns"].items():
         if isinstance(cDesc, str):
             columns.append(Column(cName, Dt[cDesc.upper()]))
@@ -49,12 +69,12 @@ with open(jsonPath, 'r') as jsonfile:
             raise TypeError("Column description must be string or map")
     amount = data.get("amount", amount)
 
-model = SqlModel(fake, dbname, columns)
+model: SqlModel = SqlModel(fake, dbname, columns)
 
 # generate datasets and write them into a file
 try: 
     with open(targetPath, filemode, encoding=encoding) as file:
-        query = model.generate(amount)
+        query: str = model.generate(amount)
         file.write(query)
 except (exceptions.TooManyUniqueFailsException, TypeError, ValueError) as e:
     print(e)

@@ -9,22 +9,23 @@ from rstr import xeger
 import re
 import datetime
 
+from typing import Any;
+from typing import Callable;
+from typing import Iterable;
+from typing import Union;
+
 class Column:
     nextkey = "nextkey"
 
-    def __init__(self, name, type, metadata={}):
-        if not isinstance(type, Dt) or not isinstance(metadata, dict):
-            raise TypeError()
-        self.name = name
-        self.type = type
-        self.metadata = metadata
+    def __init__(self, name: str, type: Dt, metadata: dict[str, Any]={}):
+        self.name: str = name
+        self.type: Dt = type
+        self.metadata: dict[str, Any] = metadata
         if type == Dt.PRIMARY_KEY and not Column.nextkey in self.metadata:
             self.metadata[Column.nextkey] = 0
 
-    def getListGenerator(self, fake):
-        if not isinstance(fake, Faker):
-            raise TypeError()
-        unique = self.metadata.get("unique", False)
+    def getListGenerator(self, fake: Faker) -> Callable[[int], Any]:
+        unique: bool = self.metadata.get("unique", False)
         maxUniqueFailsMultiplier = self.metadata.get("mufm", 3)
         min = self.metadata.get("min", 0)
         max = self.metadata.get("max")
@@ -92,24 +93,34 @@ class Column:
             raise NotImplementedError()
         
         elif self.type == Dt.ASCENDING:
-            allType = Dt[self.metadata.get("alltype")]
-            amount = len(self.metadata.get("names"))
-            reverse = self.metadata.get("reverse", False)
-            if allType == Dt.DATE:
-                return lambda size: numg.generateAscendingDatesList(fake, size, amount, start=start, end=end, reverse=reverse)
-            raise NotImplementedError()
+            allType_str: str = str(self.metadata.get("alltype"))
+            allType: Dt = Dt[allType_str]
+
+            maybe_names: Union[list[Any], None] = self.metadata.get("names")
+            if maybe_names != None:
+                names: list[Any] = maybe_names
+                amount: int = len(names)
+                reverse: bool = self.metadata.get("reverse", False)
+                if allType == Dt.DATE:
+                    return lambda size: numg.generateAscendingDatesList(fake, size, amount, start=start, end=end, reverse=reverse)
+                raise NotImplementedError()
+            else:
+                raise NotImplementedError()
 
         else:
             raise NotImplementedError()
         
-    def getNextKeys(self, amount=1):
+    def getNextKeys(self, amount: int=1) -> list[int]:
         id = self.metadata.get(Column.nextkey)
         if id is None:
             raise ValueError("No ID given")
         self.metadata[Column.nextkey] += amount
         return [i for i in range(id, id + amount)]
     
-    def __str__(self):
+    def __str__(self) -> str:
         if self.type.value >= 1000:
-            return ", ".join(self.metadata.get("names"))
+            names: Any = self.metadata.get("names")
+            # necessary because metadata is dict[str, Any]
+            if type(names) is Iterable[str]: 
+                return ", ".join(names)
         return self.name
