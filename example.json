@@ -1,62 +1,108 @@
-{
-    "db_name": "my_cool_database",
-    "columns": {
-        "id": {
-            "type": "PRIMARY_KEY",
-            "nextkey": 1000
+[
+    {
+        "table": "my_cool_table",
+        "columns": {
+            "id": {
+                "type": "PRIMARY_KEY",
+                "nextkey": 1000
+            },
+            "firstName": "FIRST_NAME",
+            "lastName": {
+                "type": "LAST_NAME",
+                "unique": true,
+                "mufm": 5
+            },
+            "personName": "FULL_NAME",
+            "company": "COMPANY_NAME",
+            "address_street": "STREET",
+            "address_housenumber": "HOUSENUMBER",
+            "address_town": "TOWN",
+            "address_plz": "PLZ",
+            "some_place": "STREET_HOUSENUMBER",
+            "price": {
+                "type": "MONEY",
+                "max": 1000
+            },
+            "somefloat": {
+                "type": "FLOAT",
+                "max": 0.5,
+                "acc": 10
+            },
+            "someint": {
+                "type": "INTEGER",
+                "min": 1,
+                "max": 50
+            },
+            "somedate": {
+                "type": "DATE",
+                "start": "1970-01-01",
+                "end": "-1y"
+            },
+            "sometime": "TIME",
+            "somedatetime": "DATE_TIME",
+            "category": {
+                "type": "VALUES",
+                "values": [
+                    "Category A",
+                    "Category B",
+                    "Category C"
+                ]
+            },
+            "somestringthing": {
+                "type": "FORMAT_STRING",
+                "regex": "[A-Z]\\-NR\\d{7}"
+            },
+            "word": "RANDOM_STRING"
         },
-        "firstName": "FIRST_NAME",
-        "lastName": {
-            "type": "LAST_NAME",
-            "unique": true,
-            "mufm": 5
-        },
-        "personName": "FULL_NAME",
-        "company": "COMPANY_NAME",
-        "address_street": "STREET",
-        "address_housenumber": "HOUSENUMBER",
-        "address_town": "TOWN",
-        "address_plz": "PLZ",
-        "some_place": "STREET_HOUSENUMBER",
-        "price": {
-            "type": "MONEY",
-            "max": 1000
-        },
-        "discount": {
-            "type": "FLOAT",
-            "max": 0.5,
-            "acc": 10
-        },
-        "amount": {
-            "type": "INTEGER",
-            "min": 1,
-            "max": 50
-        },
-        "somedate": {
-            "type": "DATE",
-            "start": "1970-01-01",
-            "end": "-1y"
-        },
-        "sometime": "TIME",
-        "somedatetime": "DATE_TIME",
-        "category": {
-            "type": "VALUES",
-            "values": [
-                "Category A",
-                "Category B",
-                "Category C"
-            ]
-        },
-        "somestringthing": {
-            "type": "FORMAT_STRING",
-            "regex": "[A-Z]\\-NR\\d{7}"
-        },
-        "word": "RANDOM_STRING",
-        "_": {
-            "type": "ASCENDING",
-            "names": ["first_date", "middle_date", "last_date"],
-            "alltype": "DATE"
-        }
+        "amount": 100
     },
-    "amount": 100
-}
+    {
+        "table": "another_cool_table",
+        "columns": {
+            "id": "PRIMARY_KEY",
+            "foreignkey": {
+                "type": "FOREIGN_KEY",
+                "column": "my_cool_table.id"
+            },
+            "lower_integer": {
+                "type": "LOWERTHAN_INTEGER",
+                "column": "my_cool_table.someint",
+                "fk": "my_cool_table.id",
+                "max": 50
+            },
+            "higher_integer": {
+                "type": "HIGHERTHAN_INTEGER",
+                "column": "lower_integer",
+                "max": 100,
+                "diff": 40,
+                "maxdiff": 80
+            },
+            "lower_float": {
+                "type": "LOWERTHAN_FLOAT",
+                "column": "my_cool_table.somefloat",
+                "fk": "my_cool_table.id",
+                "max": 0.5,
+                "diff": 0.1
+            },
+            "higher_float": {
+                "type": "HIGHERTHAN_FLOAT",
+                "column": "my_cool_table.somefloat",
+                "fk": "my_cool_table.id",
+                "max": 1,
+                "acc": 1000,
+                "maxdiff": 0.8
+            },
+            "before_date": {
+                "type": "LOWERTHAN_DATE",
+                "column": "my_cool_table.somedate",
+                "fk": "my_cool_table.id",
+                "start": "1940-01-01"
+            },
+            "after_date": {
+                "type": "HIGHERTHAN_DATE",
+                "column": "my_cool_table.somedate",
+                "fk": "my_cool_table.id"
+            }
+        }
+    }
+]

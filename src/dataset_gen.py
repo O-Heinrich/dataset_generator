@@ -1,6 +1,6 @@
 from faker import Faker
 import argparse
-from sql_model import SqlModel
+from tableModel import TableModel
 from column import Column
 from datatypes import Datatype as Dt
 from wonderwords import RandomWord
@@ -8,9 +8,12 @@ import json
 import exceptions
 import os
 import traceback
+from columnListener import ColumnListener
 import subprocess
 import os
 import platform
+
+from typing import Optional;
 
 # get python venv path
 python_path: str = ""
@@ -39,6 +42,7 @@ parser.add_argument('-f', action="store", dest="filepath", default="")
 parser.add_argument('-a', action="store_true", dest="append", default=False)
 parser.add_argument('-o', action="store_true", dest="overwrite", default=False)
 parser.add_argument('-n', action="store", dest="amount", type=int, default=20)
+parser.add_argument('--oneline', action="store_true", dest="noNewline", default=False)
 
 # get input arguments
 parsed: argparse.Namespace = parser.parse_args()
@@ -46,39 +50,66 @@ localization: str = parsed.location
 encoding: str = parsed.encoding
 jsonPath: str = parsed.jsonfile
 targetPath: str = parsed.filepath
-appendMode: str = parsed.append
-overwriteMode: str = parsed.overwrite
+appendMode: bool = parsed.append
+overwriteMode: bool = parsed.overwrite
 amount: int = parsed.amount
+noNewline: bool = parsed.noNewline
 
 # validate input arguments and create resulting objects
 r = RandomWord()
 targetPath = targetPath or r.word() + "_" + r.word() + "_" + r.word() + ".sql"
-filemode = "w" if overwriteMode else "a" if appendMode else "x"
-fake = Faker(localization)
+filemode: str = "w" if overwriteMode else "a" if appendMode else "x"
+fake: Faker = Faker(localization)
 
+tables: dict[str, TableModel] = {}
 with open(jsonPath, 'r') as jsonfile:
     data = json.load(jsonfile)
-    dbname: str = data["db_name"]
-    columns: list[Column] = []
-    for cName, cDesc in data["columns"].items():
-        if isinstance(cDesc, str):
-            columns.append(Column(cName, Dt[cDesc.upper()]))
-        elif isinstance(cDesc, dict):
-            columns.append(Column(cName, Dt[cDesc["type"].upper()], {k: v for k, v in cDesc.items() if k != "type"}))
-        else:
-            raise TypeError("Column description must be string or map")
-    amount = data.get("amount", amount)
-
-model: SqlModel = SqlModel(fake, dbname, columns)
+    if not isinstance(data, list):
+        data = [data]
+    for table in data:
+        tablename: str = table["table"]
+        if tablename in tables:
+            raise exceptions.DuplicateTablenameException()
+        columns: dict[str, Column] = {}
+        for cName, cDesc in table["columns"].items():
+            newColumn: Optional[Column]
+            if isinstance(cDesc, str):
+                newColumn = Column(cName, Dt[cDesc.upper()])
+            elif isinstance(cDesc, dict):
+                newColumn = Column(cName, Dt[cDesc["type"].upper()], cDesc)
+            else:
+                raise TypeError("Column description must be string or map")
+            columns[newColumn.name] = newColumn
+            if newColumn.type.value >= 2000:
+                if not isinstance(cDesc, dict):
+                    raise TypeError("Column description must be map for dependent types")
+                split: list[str] = str(newColumn.metadata.foreignColumn()).split(".")
+                listener = ColumnListener()
+                if len(split) == 1:
+                    columns[split[0]].addListener(listener)
+                    newColumn.ownTable = True
+                elif len(split) == 2:
+                    tables[split[0]].columns[split[1]].addListener(listener)
+                else:
+                    raise KeyError()
+                newColumn.listenTo(listener)
+        newTable: TableModel = TableModel(fake, tablename, columns, table.get("amount", amount), noNewline)
+        tables[tablename] = newTable
 
 # generate datasets and write them into a file
-try: 
+try:
     with open(targetPath, filemode, encoding=encoding) as file:
-        query: str = model.generate(amount)
-        file.write(query)
-except (exceptions.TooManyUniqueFailsException, TypeError, ValueError) as e:
+        if filemode == "a":
+            file.write("\n\n-- The following Queries have been generated automatically using a script and appended to this file\n\n")
+        for newTable in tables.values():
+            query: str = newTable.generate()
+            file.write(query)
+            file.write("\n\n")
+except Exception as e:
     print(e)
-    #print(traceback.format_exc())
+    print(traceback.format_exc())
     if filemode == "x":
         print("removing created file")
         os.remove(targetPath)
+else:
+    print("Successfully wrote query into", targetPath)

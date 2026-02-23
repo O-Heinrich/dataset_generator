@@ -44,10 +44,16 @@ Wenn noch nicht geschehen muss die virtuelle environment aktiviert werden:
 ./generator_venv/bin/activate
 ```
 
-Beziehungsweise unter Powershell:
+Unter Powershell:
 
 ```powershell
 ./generator_venv/bin/Activate.ps1
+```
+
+Unter Linux:
+
+```bash
+source generator_venv/bin/activate
 ```
 
 Das script kann mit folgendem Befehl ausgeführt werden:
@@ -77,7 +83,7 @@ Die Konfiguration geschieht dabei über eine json Datei, in welcher der Name der
 
 | Feldname | Typ | | Beschreibung |
 | - | - | - | - |
-| db_name | String | required | Name der Tabelle |
+| table | String | required | Name der Tabelle |
 | columns | Map | required | Repräsentation der Spalten der Tabelle und ihrer Typen. Siehe [Columns](#columns) |
 | amount | int | optional | Anzahl der für diese Tabelle zu generierenden Datensätze. Überschreibt die -n Option |
 
@@ -85,7 +91,7 @@ Zum Beispiel:
 
 ```json
 {
-    "db_name": "tabelle",
+    "table": "tabelle",
     "columns": {
         "feldname1": "FULL_NAME",
         "feldname2": {
@@ -96,6 +102,30 @@ Zum Beispiel:
     "amount": 1000
 }
 ```
+
+Alternativ kann eine Liste von Tabellen angegeben werden, um Daten für mehrere Tabellen zu generieren:
+
+```json
+[
+    {
+        "table": "tabelle",
+        "columns": {
+            "id": "PRIMARY_KEY",
+            "feld": "FIRST_NAME"
+        },
+        "amount": 1000
+    },
+    {
+        "table": "tabelle2",
+        "columns": {
+            "id": "PRIMARY_KEY",
+            "feld": "LAST_NAME"
+        }
+    }
+]
+```
+
+Die Tabellennamen dürfen sich hier nicht wiederholen.
 
 #### Columns
 
@@ -114,6 +144,7 @@ Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder
 | Typ | Beschreibung | Parameter | Default | Beschreibung |
 | - | - | - | - | - |
 | PRIMARY_KEY | Integer ID, welche bei jedem Datensatz hochgezählt wird | nextkey | 0 | Erster zu verteilende ID |
+| FOREIGN_KEY | Integer ID, welche garantiert ein valider Wert des zugehörigen PRIMARY_KEY ist | column | | required - Name der Tabelle und Spalte, auf die dieser Fremdschlüssel verweist, im Format "tabellenname.spaltenname"; Die andere Tabelle muss zuvor definiert worden sein |
 | FIRST_NAME | Vorname mit evtl Titel | | | |
 | LAST_NAME | Nachname | | | |
 | FULL_NAME | Vor- und Nachname | | | |
@@ -133,23 +164,72 @@ Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder
 | DATE | Datum im üblichen SQL-Format (YYYY-MM-DD) | start | "-99y" | Frühestes mögliches Datum (inklusiv). Mögliche String Formate: <ul><li>"now" oder "today"</li><li>Datum im Format wie "1970-01-01" (inklusive führende nullen)</li><li>+ oder -, gefolgt von einer Zahl und d, w oder y für (day, week, year) um Abstand zum jetzigen Zeitpunkt anzugeben. Z. B. "+3y", "-5d"...</li></ul> |
 | | | end | "now" | Spätestes mögliches Datum (exklusiv). Format siehe start |
 | TIME | Uhrzeit im üblichen SQL-Format (HH:MI:SS) | | | |
-| DATE_TIME | Datum und Uhrzeit im üblichen SQL-Format (YYYY-MM-DD HH:MI:SS) | | | |
+| DATE_TIME | Datum und Uhrzeit im üblichen SQL-Format (YYYY-MM-DD HH:MI:SS) | start | "-99y" | siehe DATE |
+| | | end | "now" | siehe DATE |
 | VALUES | Zufälliger Wert aus einer Auswahl an Werten | values | | required - Array an möglichen Werten, darf nicht leer sein. Wiederholte Werte erhöht die Wahrscheinlichkeit entsprechend |
 | FORMAT_STRING | String, der dem angegebenen regex matched | regex | | required - regex, dem der zufällige String matchen soll |
 | RANDOM_STRING | Zufälliges englisches Wort | | | |
 
-Für logisch voneinander abhängige Spalten können die folgenden Typen verwendet werden. Die Benennung dieser Typen ist egal, und es wird immer eine map als Wert benötigt, welche immer den Typen ("type") und eine Liste der Spaltennamen ("names") enthält. Zum Beispiel:
+Für logisch innerhalb einres Datensatzes voneinander abhängige Spalten können die folgenden Typen verwendet werden. Diese benötigen immer den Parameter "column", welcher der Name der Spalte ist, von dem der Wert abhängen soll:
 
 ```json
-"xxx": {
-    "type": "ASCENDING",
-    "names": ["feld1", "feld2", "feld3"]
+"someint": {
+    "type": "INTEGER",
+    "max": 100
+},
+"lowerint": {
+    "type": "LOWERTHAN_INTEGER",
+    "column": "someint",
+    "max": 100
 }
 ```
 
-| Typ | Beschreibung | Parameter | Default | Beschreibung |
-| - | - | - | - | - |
-| ASCENDING | Generiert zufällige Werte und garantiert, dass diese aufsteigend (nicht strikt aufsteigend) sind | alltype | | required - Typ, von welchem die einzelnen Felder sind. Alle Felder erhalten denselben Typ. Zurzeit unterstützt: "DATE" |
-| | | reverse | false | Wenn true, werden die Felder absteigend statt aufsteigend generiert |
-| | | start | "-99y" | siehe Date |
-| | | end | "now" | siehe Date |
+Parameter, welche für den anderen Typen verfügbar sind, sind auch für diese Typen, soweit sinnvoll, verfügbar. Soll die Spalte von einer Spalte aus einer anderen Tabelle abhängen, so muss
+- ein FOREIGN_KEY vorhanden sein
+- der Parameter fk vorhanden sein, welcher equivalent zum "column" Parameter des FOREIGN_KEY ist
+- der column Parameter die Form "andereTabelle.andereSpalte" haben
+
+```json
+[
+    {
+        "table": "table1",
+        "columns": {
+            "id": "PRIMARY_KEY",
+            "someint": {
+                "type": "INTEGER",
+                "max": 100
+            }
+        }
+    },
+    {
+        "table": "table2",
+        "columns": {
+            "foreignkey": {
+                "type": "FOREIGN_KEY",
+                "column": "table1.id"
+            },
+            "lowerint": {
+                "type": "LOWERTHAN_INTEGER",
+                "column": "table1.someint",
+                "fk": "table1.id",
+                "max": 100
+            }
+        }
+    }
+]
+```
+
+Folgende Typen werden unterstützt:
+
+| Typ | referenzierter Typ | Beschreibung | Parameter | Default | Beschreibung |
+| - | - | - | - | - | - |
+| LOWERTHAN_INTEGER | INTEGER | Ganzzahl, welche kleiner als der Wert in der verknüpften Spalte ist | diff | 0 | Wert, um welchen der generierte Wert mindestens kleiner sein muss |
+| | | maxdiff | | Wert, um welchen der generierte Wert höchstens kleiner sein darf |
+| HIGHERTHAN_INTEGER | INTEGER | Ganzzahl, welche größer oder gleich dem Wert in der verknüpften Spalte ist | diff | 0 | Wert, um welchen der generierte Wert mindestens größer sein muss |
+| | | maxdiff | | Wert, um welchen der generierte Wert höchstens größer sein darf |
+| LOWERTHAN_FLOAT | FLOAT | Gleitkommazahl, welche kleiner als der Wert in der verknüpften Spalte ist | diff | 0 | siehe LOWERTHAN_INTEGER |
+| | | maxdiff | | siehe LOWERTHAN_INTEGER |
+| HIGHERTHAN_FLOAT | FLOAT | Gleitkommazahl, welche größer oder gleich dem Wert in der verknüpften Spalte ist | diff | 0 | siehe HIGHERTHAN_INTEGER |
+| | | maxdiff | | siehe HIGHERTHAN_INTEGER |
+| LOWERTHAN_DATE | DATE | Datum, welches vor oder gleich dem Datum der verknüpften Spalte ist | | | |
+| HIGHERTHAN_DATE | DATE | Datum, welches nach oder gleich dem Datum der verknüpften Spalte ist | | | |

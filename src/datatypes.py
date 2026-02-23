@@ -1,6 +1,9 @@
 from enum import Enum
 
 class Datatype(Enum):
+    
+    DEFAULT = 0 # Default type, for no logic
+
     FIRST_NAME = 1
     LAST_NAME = 2
     FULL_NAME = 3
@@ -20,7 +23,12 @@ class Datatype(Enum):
     FORMAT_STRING = 16
     RANDOM_STRING = 17
     PRIMARY_KEY = 20
-    FOREIGN_KEY = 21 # UNSUPPORTED
 
-    # Types for multiple dependend fields. Logic accounts for these to have values >= 1000
-    ASCENDING = 1001
+    # Types for fields dependend on fields from other tables. Logic accounts for these to have values >= 2000
+    FOREIGN_KEY = 2001
+    LOWERTHAN_DATE = 2002
+    HIGHERTHAN_DATE = 2003
+    LOWERTHAN_INTEGER = 2004
+    HIGHERTHAN_INTEGER = 2005
+    LOWERTHAN_FLOAT = 2006
+    HIGHERTHAN_FLOAT = 2007
