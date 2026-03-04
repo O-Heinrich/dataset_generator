@@ -1,12 +1,13 @@
 from faker import Faker
 from column import Column
-from helpers import stringify
+from helpers import createInsertQuery
 from datatypes import Datatype as Dt
+from dialect import SqlDialect as SD
 
-from typing import Optional
+from typing import Optional, Any
 
 class TableModel:
-    def __init__(self, fake: Faker, tablename: str, columns: dict[str, Column], amount: int, noNewlines: bool=False):
+    def __init__(self, fake: Faker, tablename: str, columns: dict[str, Column], amount: int, noNewlines: bool=False, dialect: SD=SD.DEFAULT):
         self.fake: Faker = fake
         self.columns: dict[str, Column] = columns
         self.tablename: str = tablename
@@ -19,25 +20,14 @@ class TableModel:
             elif c.type == Dt.FOREIGN_KEY:
                 self.foreign.append(name)
         self.noNewlines: bool = noNewlines
+        self.dialect: SD = dialect
 
     def generate(self) -> str:
-        query: str = "INSERT INTO " + self.tablename + " ("
-        query += ", ".join(self.columns.keys())
-        query += ") VALUES\n"
-        
-        generatedValues: list[str] = []
+        generatedValues: list[list[Any]] = []
         for _ in range(self.amount):
-            newValue: str = "("
             key: Optional[int] = None
             if self.primary is not None:
                 key = self.columns[self.primary].predictKey()
             fKeys: dict[str, int] = {}
-            newValue += ", ".join([stringify(c.getValue(self.fake, key, fKeys)) for c in self.columns.values()])
-            newValue += ")"
-            generatedValues.append(newValue)
-        sep: str = ",\n"
-        if self.noNewlines:
-            sep = ", "
-        query += sep.join(generatedValues)
-        query += ";"
-        return query
+            generatedValues.append([c.getValue(self.fake, key, fKeys) for c in self.columns.values()])
+        return createInsertQuery(self.tablename, [n for n in self.columns.keys()], generatedValues, self.dialect, noNewLine=self.noNewlines)

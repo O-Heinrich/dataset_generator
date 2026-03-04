@@ -12,8 +12,9 @@ from columnListener import ColumnListener
 import subprocess
 import os
 import platform
+from dialect import SqlDialect as SD, toDialect
 
-from typing import Optional;
+from typing import Optional, Union
 
 # get python venv path
 python_path: str = ""
@@ -43,6 +44,7 @@ parser.add_argument('-a', action="store_true", dest="append", default=False)
 parser.add_argument('-o', action="store_true", dest="overwrite", default=False)
 parser.add_argument('-n', action="store", dest="amount", type=int, default=20)
 parser.add_argument('--oneline', action="store_true", dest="noNewline", default=False)
+parser.add_argument('-d', action="store", dest="sqlDialect", default="")
 
 # get input arguments
 parsed: argparse.Namespace = parser.parse_args()
@@ -54,19 +56,26 @@ appendMode: bool = parsed.append
 overwriteMode: bool = parsed.overwrite
 amount: int = parsed.amount
 noNewline: bool = parsed.noNewline
+sqlDialect: str = parsed.sqlDialect
 
 # validate input arguments and create resulting objects
 r = RandomWord()
 targetPath = targetPath or r.word() + "_" + r.word() + "_" + r.word() + ".sql"
 filemode: str = "w" if overwriteMode else "a" if appendMode else "x"
 fake: Faker = Faker(localization)
+dialect: SD = SD.DEFAULT
+if sqlDialect:
+    dialect = toDialect(sqlDialect)
 
 tables: dict[str, TableModel] = {}
 with open(jsonPath, 'r') as jsonfile:
-    data = json.load(jsonfile)
+    data: Union[list[dict], dict] = json.load(jsonfile)
+    ldata: list[dict]
     if not isinstance(data, list):
-        data = [data]
-    for table in data:
+        ldata = [data]
+    else:
+        ldata = data
+    for table in ldata:
         tablename: str = table["table"]
         if tablename in tables:
             raise exceptions.DuplicateTablenameException()
@@ -93,7 +102,7 @@ with open(jsonPath, 'r') as jsonfile:
                 else:
                     raise KeyError()
                 newColumn.listenTo(listener)
-        newTable: TableModel = TableModel(fake, tablename, columns, table.get("amount", amount), noNewline)
+        newTable: TableModel = TableModel(fake, tablename, columns, table.get("amount", amount), noNewline, dialect)
         tables[tablename] = newTable
 
 # generate datasets and write them into a file
@@ -104,7 +113,10 @@ try:
         for newTable in tables.values():
             query: str = newTable.generate()
             file.write(query)
-            file.write("\n\n")
+            if noNewline:
+                file.write("\n")
+            else:
+                file.write("\n\n")
 except Exception as e:
     print(e)
     print(traceback.format_exc())
