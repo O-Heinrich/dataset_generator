@@ -4,7 +4,7 @@ Dies ist ein Script zum Generieren von Beispiel-Datensätzen für relationale Da
 
 ## Setup
 
-Es wird vorrausgesetzt, dass Python sowie Python venv installiert ist.
+Es wird vorausgesetzt, dass Python sowie Python venv installiert ist.
 
 ```console
 python -m venv generator_venv
@@ -164,9 +164,14 @@ Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder
 | | | max | | Siehe MONEY |
 | DATE | Datum im üblichen SQL-Format (YYYY-MM-DD) | start | "-99y" | Frühestes mögliches Datum (inklusiv). Mögliche String Formate: <ul><li>"now" oder "today"</li><li>Datum im Format wie "1970-01-01" (inklusive führende nullen)</li><li>+ oder -, gefolgt von einer Zahl und d, w oder y für (day, week, year) um Abstand zum jetzigen Zeitpunkt anzugeben. Z. B. "+3y", "-5d"...</li></ul> |
 | | | end | "now" | Spätestes mögliches Datum (exklusiv). Format siehe start |
-| TIME | Uhrzeit im üblichen SQL-Format (HH:MI:SS) | | | |
+| TIME | Uhrzeit im üblichen SQL-Format (HH:MI:SS) | startTime | "00:00:00" | Früheste mögliche Uhrzeit (inklusiv) im format "HH:MI:SS" |
+| | | endTime | "23:59:59" | Späteste mögliche Uhrzeit (exklusiv) entweder im Format "HH:MI:SS" |
+| | | timeRounding | 0 | Anzahl der vollen Minuten auf die gerundet wird. Muss positiv sein und wenn größer als 60 durch 60 teilbar sein. 0 bedeutet keine Rundung |
 | DATE_TIME | Datum und Uhrzeit im üblichen SQL-Format (YYYY-MM-DD HH:MI:SS) | start | "-99y" | siehe DATE |
 | | | end | "now" | siehe DATE |
+| | | startTime | "00:00:00" | siehe TIME |
+| | | endTime | "23:59:59" | siehe TIME |
+| | | timeRounding | 0 | siehe TIME |
 | VALUES | Zufälliger Wert aus einer Auswahl an Werten | values | | required - Array an möglichen Werten, darf nicht leer sein. Wiederholte Werte erhöht die Wahrscheinlichkeit entsprechend |
 | FORMAT_STRING | String, der dem angegebenen regex matched | regex | | required - regex, dem der zufällige String matchen soll |
 | RANDOM_STRING | Zufälliges englisches Wort | | | |
@@ -232,5 +237,7 @@ Folgende Typen werden unterstützt:
 | | | maxdiff | | siehe LOWERTHAN_INTEGER |
 | HIGHERTHAN_FLOAT | FLOAT | Gleitkommazahl, welche größer oder gleich dem Wert in der verknüpften Spalte ist | diff | 0 | siehe HIGHERTHAN_INTEGER |
 | | | maxdiff | | siehe HIGHERTHAN_INTEGER |
-| LOWERTHAN_DATE | DATE | Datum, welches vor oder gleich dem Datum der verknüpften Spalte ist | | | |
-| HIGHERTHAN_DATE | DATE | Datum, welches nach oder gleich dem Datum der verknüpften Spalte ist | | | |
+| LOWERTHAN_DATE | DATE | Datum, welches vor oder gleich dem Datum der verknüpften Spalte ist | timeDiff | {} |  Mapping, welches angibt um wieviel das generierte Datum mindestens kleiner sein muss. Die Schlüssel können eine beliebige Kombination aus "days", "weeks", "hours", "minutes" oder "seconds" sein und die Werte der entsprechende Unterschied |
+| | | timeMaxdiff | | Mapping, welches angibt um wieviel das generierte Datum maximal kleiner sein darf, siehe timeDiff |
+| HIGHERTHAN_DATE | DATE | Datum, welches nach oder gleich dem Datum der verknüpften Spalte ist | timeDiff | {} | siehe LOWERTHAN_DATE |
+| | | timeMaxdiff | | siehe LOWERTHAN_DATE |

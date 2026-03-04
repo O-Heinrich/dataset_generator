@@ -10,8 +10,12 @@ def stringifyValue(any: Any, dialect: SD, sep: str=", ") -> str:
         return f'{q}{any.replace(q, f'{q}{q}')}{q}'
     elif isinstance(any, list):
         return sep.join([stringifyValue(x, dialect, sep) for x in any])
+    elif isinstance(any, datetime.datetime):
+        return f'{q}{any.strftime("%Y-%m-%d %H:%M:%S")}{q}'
     elif isinstance(any, datetime.date):
         return f'{q}{any.strftime("%Y-%m-%d")}{q}'
+    elif isinstance(any, datetime.time):
+        return f'{q}{any.strftime("%H:%M:%S")}{q}'
     else:
         return str(any)
 
@@ -28,7 +32,7 @@ def createInsertQuery(tableName: str, columnNames: list[str], values: list[list[
         query = "INSERT INTO "
     else:
         raise NotImplementedError()
-    
+
     query += stringifyName(tableName, dialect)
 
     query += " ("

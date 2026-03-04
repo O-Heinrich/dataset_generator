@@ -63,9 +63,9 @@ class Column:
         elif self.type == Dt.DATE:
             return numg.generateDate(fake, start=self.metadata.start(), end=self.metadata.end())
         elif self.type == Dt.TIME:
-            return numg.generateTime(fake)
+            return numg.generateTime(fake, startTime=self.metadata.startTime(), endTime=self.metadata.endTime(), timeRounding=self.metadata.timeRounding())
         elif self.type == Dt.DATE_TIME:
-            return numg.generateDateTime(fake, start=self.metadata.start(), end=self.metadata.end())
+            return numg.generateDateTime(fake, start=self.metadata.start(), end=self.metadata.end(), startTime=self.metadata.startTime(), endTime=self.metadata.endTime(), timeRounding=self.metadata.timeRounding())
         elif self.type == Dt.VALUES:
             values = self.metadata.values()
             if values is None or not isinstance(values, list) or len(values) < 1:
@@ -106,9 +106,9 @@ class Column:
             diff: int = self.metadata.diff()
 
             if self.type == Dt.LOWERTHAN_DATE:
-                return numg.generateDate(fake, start=self.metadata.start(), end=val)
+                return numg.generateDate(fake, start=self.metadata.getStartWithMaxdiff(val), end=val - self.metadata.timeDiff())
             elif self.type == Dt.HIGHERTHAN_DATE:
-                return numg.generateDate(fake, start=val, end=self.metadata.end())
+                return numg.generateDate(fake, start=val + self.metadata.timeDiff(), end=self.metadata.getEndWithMaxdiff(val))
             elif self.type == Dt.LOWERTHAN_INTEGER:
                 return numg.generateInt(self.metadata.getMinWithMaxdiff(val), val - diff)
             elif self.type == Dt.HIGHERTHAN_INTEGER:

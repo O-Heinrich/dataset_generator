@@ -38,7 +38,12 @@
                 "start": "1970-01-01",
                 "end": "-1y"
             },
-            "sometime": "TIME",
+            "sometime": {
+                "type": "TIME",
+                "startTime": "08:00:00",
+                "endTime": "16:30:01",
+                "timeRounding": 30
+            },
             "somedatetime": "DATE_TIME",
             "category": {
                 "type": "VALUES",
@@ -96,7 +101,13 @@
                 "type": "LOWERTHAN_DATE",
                 "column": "my_cool_table.somedate",
                 "fk": "my_cool_table.id",
-                "start": "1940-01-01"
+                "start": "1940-01-01",
+                "timeDiff": {
+                    "days": 3650
+                },
+                "timeMaxdiff": {
+                    "days": 7300
+                }
             },
             "after_date": {
                 "type": "HIGHERTHAN_DATE",
