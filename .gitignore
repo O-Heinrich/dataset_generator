@@ -6,3 +6,4 @@
 *.sql
 *.json
 !example.json
+/src/*/__pycache__/

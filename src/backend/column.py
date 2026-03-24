@@ -1,13 +1,13 @@
 from faker import Faker
 from wonderwords import RandomWord
-from datatypes import Datatype as Dt
-import nameGenerator as ng
-import addressGenerator as ag
-import numbersGenerator as numg
+from enums.datatypes import Datatype as Dt
+import backend.nameGenerator as ng
+import backend.addressGenerator as ag
+import backend.numbersGenerator as numg
 import random
 from rstr import xeger
-from columnListener import ColumnListener
-from metadata import Metadata
+from backend.columnListener import ColumnListener
+from backend.metadata import Metadata
 
 from typing import Any
 from typing import Optional

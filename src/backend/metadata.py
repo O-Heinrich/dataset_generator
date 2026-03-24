@@ -1,6 +1,6 @@
 import re
 from datetime import date, datetime, time, timedelta
-from datatypes import Datatype as Dt
+from enums.datatypes import Datatype as Dt
 
 from typing import Any
 from typing import Optional

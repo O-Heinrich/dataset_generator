@@ -1,8 +1,8 @@
 from faker import Faker
-from column import Column
-from helpers import createInsertQuery
-from datatypes import Datatype as Dt
-from dialect import SqlDialect as SD
+from backend.column import Column
+from backend.helpers import createInsertQuery
+from enums.datatypes import Datatype as Dt
+from enums.dialect import SqlDialect as SD
 
 from typing import Optional, Any
 

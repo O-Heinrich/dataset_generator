@@ -1,5 +1,5 @@
 import datetime
-from dialect import SqlDialect as SD
+from enums.dialect import SqlDialect as SD
 import re
 
 from typing import Any;

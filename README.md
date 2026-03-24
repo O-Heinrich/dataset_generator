@@ -1,6 +1,6 @@
 # dataset_generator
 
-Dies ist ein Script zum Generieren von Beispiel-Datensätzen für relationale Datenbanken. Es nimmt eine json Konfigurationsdatei entgegen und schreibt einen SQL-Befehl in eine Datei.
+Dies ist ein Script zum Generieren von Beispiel-Datensätzen für relationale Datenbanken. Es nimmt eine json Konfigurationsdatei entgegen und schreibt einen SQL-Befehl in eine Datei. Die json kann über eine GUI konfiguriert werden.
 
 ## Setup
 
@@ -12,31 +12,48 @@ generator_venv/bin/pip install wonderwords
 generator_venv/bin/pip install Faker
 generator_venv/bin/pip install rstr
 generator_venv/bin/pip install mypy==1.18.2
-```
-
-### Linux
-
-```bash
-python3 -m venv generator_venv
-source generator_venv/bin/activate
-generator_venv/bin/pip install wonderwords
-generator_venv/bin/pip install Faker
-generator_venv/bin/pip install rstr
-generator_venv/bin/pip install mypy==1.18.2
+generator_venv/bin/pip install tkcalendar
+generator_venv/bin/pip install tkTimePicker
+generator_venv/bin/pip install tkinter-tooltip
 ```
 
 ### Powershell
 
 ```powershell
-python -m venv generator_venv
-./generator_venv/bin/Activate.ps1
-generator_venv/bin/pip install wonderwords
-generator_venv/bin/pip install Faker
-generator_venv/bin/pip install rstr
-generator_venv/bin/pip install mypy==1.18.2
+./install.ps1
+```
+
+### Linux
+
+```bash
+python -m venv ./generator_venv
+sudo apt install python3-tk
+./install.sh
 ```
 
 ## Usage
+
+### GUI-Version
+
+```console
+./generator_venv/bin/activate
+python src/gui_gen.py
+```
+
+Unter Powershell:
+
+```powershell
+./start.ps1
+```
+
+Unter Linux:
+
+```bash
+source generator_venv/bin/activate
+python src/gui_gen.py
+```
+
+### Sonst
 
 Wenn noch nicht geschehen muss die virtuelle environment aktiviert werden:
 
@@ -62,7 +79,7 @@ Das script kann mit folgendem Befehl ausgeführt werden:
 python src/dataset_gen.py
 ```
 
-### Options
+#### Options
 
 Folgende Optionen können an den Befehl angehangen werden:
 
@@ -73,12 +90,12 @@ Folgende Optionen können an den Befehl angehangen werden:
 | -a | SQL-Befehl wird an Datei angehangen. Wird von -o überschrieben | False - Existiert die Zieldatei bereits, so wird ein Error geworfen |
 | -o | Neuer Inhalt überschreibt Inhalt der Datei, sollte die Datei bereits existieren. Überschreibt -a | False - Existiert die Zieldatei bereits, so wird ein Error geworfen |
 | -n | Anzahl der zu generierenden Datensätze. Wenn in config json Datei angegeben, wird dieser Wert überschrieben | 20 |
-| -e | Zeichencodierung | utf-8 |
+| -e | Zeichencodierung für die zu erstellende Datei | utf-8 |
 | -d | Spezieller SQL-Dialekt - Unterstützte Werte: PostgreSQL (p) - case insensitive, Abkürzung in Klammern | |
 | -l | Location wie in [https://faker.readthedocs.io/en/master/#localization](https://faker.readthedocs.io/en/master/#localization). | de_DE |
 > **-l Kann für Addressen zu Fehlern führen.**
 
-### Config
+#### Config
 
 Die Konfiguration geschieht dabei über eine json Datei, in welcher der Name der Tabelle sowie die Art der zu generierenden Daten festgelegt werden kann. Beispielhaft siehe example.json. Die json hat folgende Felder:
 
@@ -128,7 +145,7 @@ Alternativ kann eine Liste von Tabellen angegeben werden, um Daten für mehrere 
 
 Die Tabellennamen dürfen sich hier nicht wiederholen.
 
-#### Columns
+##### Columns
 
 Das Columns Feld enthält die Namen der Spalten als Schlüssel und die Beschreibung des jeweiligen Datentyps als Wert. Zum Beispiel:
 

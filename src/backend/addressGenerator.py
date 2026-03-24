@@ -1,7 +1,7 @@
 from faker import Faker
 import re
-from exceptions import InvalidGenerationException
-from address import Address
+from exceptions.exceptions import InvalidGenerationException
+from backend.address import Address
 
 from typing import Union
 from typing import Match
