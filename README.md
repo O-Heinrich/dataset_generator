@@ -254,7 +254,15 @@ Folgende Typen werden unterstützt:
 | | | maxdiff | | siehe LOWERTHAN_INTEGER |
 | HIGHERTHAN_FLOAT | FLOAT | Gleitkommazahl, welche größer oder gleich dem Wert in der verknüpften Spalte ist | diff | 0 | siehe HIGHERTHAN_INTEGER |
 | | | maxdiff | | siehe HIGHERTHAN_INTEGER |
-| LOWERTHAN_DATE | DATE | Datum, welches vor oder gleich dem Datum der verknüpften Spalte ist | timeDiff | {} |  Mapping, welches angibt um wieviel das generierte Datum mindestens kleiner sein muss. Die Schlüssel können eine beliebige Kombination aus "days", "weeks", "hours", "minutes" oder "seconds" sein und die Werte der entsprechende Unterschied |
-| | | timeMaxdiff | | Mapping, welches angibt um wieviel das generierte Datum maximal kleiner sein darf, siehe timeDiff |
-| HIGHERTHAN_DATE | DATE | Datum, welches nach oder gleich dem Datum der verknüpften Spalte ist | timeDiff | {} | siehe LOWERTHAN_DATE |
-| | | timeMaxdiff | | siehe LOWERTHAN_DATE |
+| LOWERTHAN_DATE | DATE, DATE_TIME | Datum, welches vor oder gleich dem Datum der verknüpften Spalte ist | timeDiff | {} |  Mapping, welches angibt um wieviel das generierte Datum mindestens kleiner sein muss. Die Schlüssel können eine beliebige Kombination aus "days", "weeks", "hours", "minutes" oder "seconds" sein und die Werte der entsprechende Unterschied |
+| | | | timeMaxdiff | | Mapping, welches angibt um wieviel das generierte Datum maximal kleiner sein darf, siehe timeDiff |
+| HIGHERTHAN_DATE | DATE, DATE_TIME | Datum, welches nach oder gleich dem Datum der verknüpften Spalte ist | timeDiff | {} | siehe LOWERTHAN_DATE |
+| | | | timeMaxdiff | | siehe LOWERTHAN_DATE |
+| LOWERTHAN_TIME | TIME, DATE_TIME | Uhrzeit, welche vor oder gleich der Uhrzeit der verknüpften Spalte ist | timeDiff | {} | siehe LOWERTHAN_DATE |
+| | | | timeMaxdiff | | siehe LOWERTHAN_DATE |
+| HIGHERTHAN_TIME | TIME, DATE_TIME | Uhrzeit, welche nach vor oder gleich der Uhrzeit der verknüpften Spalte ist | timeDiff | {} | siehe LOWERTHAN_DATE |
+| | | | timeMaxdiff | | siehe LOWERTHAN_DATE |
+| LOWERTHAN_DATETIME | DATE_TIME, DATE | Datum mit Uhrzeit, welches vor oder gleich dem Zeitpunkt der verknüpften Spalte ist | timeDiff | {} | siehe LOWERTHAN_DATE |
+| | | | timeMaxdiff | | siehe LOWERTHAN_DATE |
+| HIGHERTHAN_DATETIME | DATE_TIME, DATE | Datum mit Uhrzeit, welches nach oder gleich dem Zeitpunkt der verknüpften Spalte ist | timeDiff | {} | siehe LOWERTHAN_DATE |
+| | | | timeMaxdiff | | siehe LOWERTHAN_DATE |

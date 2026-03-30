@@ -30,4 +30,4 @@ class TableModel:
                 key = self.columns[self.primary].predictKey()
             fKeys: dict[str, int] = {}
             generatedValues.append([c.getValue(self.fake, key, fKeys) for c in self.columns.values()])
-        return createInsertQuery(self.tablename, [n for n in self.columns.keys()], generatedValues, self.dialect, noNewLine=self.noNewlines)
+        return createInsertQuery(self.tablename, self.columns.keys(), generatedValues, self.dialect, noNewLine=self.noNewlines)

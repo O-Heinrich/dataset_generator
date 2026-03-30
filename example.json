@@ -113,6 +113,41 @@
                 "type": "HIGHERTHAN_DATE",
                 "column": "my_cool_table.somedate",
                 "fk": "my_cool_table.id"
+            },
+            "before_time": {
+                "type": "LOWERTHAN_TIME",
+                "column": "my_cool_table.sometime",
+                "fk": "my_cool_table.id",
+                "timeDiff": {
+                    "hours": 3
+                },
+                "timeMaxdiff": {
+                    "hours": 6
+                },
+                "timeRounding": 10
+            },
+            "after_time": {
+                "type": "HIGHERTHAN_TIME",
+                "column": "my_cool_table.sometime",
+                "fk": "my_cool_table.id"
+            },
+            "before_datetime": {
+                "type": "LOWERTHAN_DATETIME",
+                "column": "my_cool_table.somedatetime",
+                "fk": "my_cool_table.id",
+                "timeDiff": {
+                    "days": 20,
+                    "hours": 10
+                },
+                "timeMaxdiff": {
+                    "days": 25
+                },
+                "timeRounding": 20
+            },
+            "after_datetime": {
+                "type": "HIGHERTHAN_DATETIME",
+                "column": "my_cool_table.somedate",
+                "fk": "my_cool_table.id"
             }
         }
     }

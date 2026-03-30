@@ -1,7 +1,6 @@
 import re
 from datetime import date, datetime, time, timedelta
 from enums.datatypes import Datatype as Dt
-
 from typing import Any
 from typing import Optional
 from typing import Union
@@ -157,17 +156,48 @@ class Metadata:
     def getStartWithMaxdiff(self, end: Union[datetime, date]) -> Union[str, datetime]:
         if self._timeMaxdiff is None:
             return self.start()
-        min: datetime = datetime.combine(end - self.dictToTimeDelta(self._timeMaxdiff), datetime.min.time())
-        if isinstance(self._start, str) or min > self._start:
-            return min
+        minimum: datetime
+        if isinstance(end, datetime):
+            minimum = end - self.dictToTimeDelta(self._timeMaxdiff)
+        else:
+            minimum  = datetime.combine(end - self.dictToTimeDelta(self._timeMaxdiff), datetime.min.time())
+        if isinstance(self._start, str) or minimum > self._start:
+            return minimum
         else:
             return self.start()
     
     def getEndWithMaxdiff(self, start: Union[datetime, date]) -> Union[str, datetime]:
         if self._timeMaxdiff is None:
             return self.end()
-        max: datetime = datetime.combine(start + self.dictToTimeDelta(self._timeMaxdiff), datetime.min.time())
-        if isinstance(self._end, str) or max < self._end:
-            return max
+        maximum: datetime
+        if isinstance(start, datetime):
+            maximum = start + self.dictToTimeDelta(self._timeMaxdiff)
+        else:
+            maximum = datetime.combine(start + self.dictToTimeDelta(self._timeMaxdiff), datetime.min.time())
+        if isinstance(self._end, str) or maximum < self._end:
+            return maximum
         else:
             return self.end()
+        
+    def getStartTimeWithMaxDiff(self, end: Union[datetime, time]) -> str:
+        if self._timeMaxdiff is None:
+            return self.startTime()
+        endTime: time = end.time() if isinstance(end, datetime) else end
+        minimum: datetime = datetime.combine(date.today(), endTime) - self.dictToTimeDelta(self._timeMaxdiff)
+        if minimum > timeStringToDatetime(self.startTime()):
+            return minimum.strftime("%H:%M:%S")
+        else:
+            return self.startTime()
+        
+    def getEndTimeWithMaxDiff(self, start: Union[datetime, time]) -> str:
+        if self._timeMaxdiff is None:
+            return self.endTime()
+        startTime: time = start.time() if isinstance(start, datetime) else start
+        maximum: datetime = datetime.combine(date.today(), startTime) + self.dictToTimeDelta(self._timeMaxdiff)
+        if maximum < timeStringToDatetime(self.endTime()):
+            return maximum.strftime("%H:%M:%S")
+        else:
+            return self.endTime()
+        
+def timeStringToDatetime(timestring: str) -> datetime:
+    return datetime.strptime(date.today().strftime("%Y-%m-%d") + " " + timestring, "%Y-%m-%d %H:%M:%S")

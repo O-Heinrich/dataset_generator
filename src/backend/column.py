@@ -8,9 +8,8 @@ import random
 from rstr import xeger
 from backend.columnListener import ColumnListener
 from backend.metadata import Metadata
-
-from typing import Any
-from typing import Optional
+from datetime import datetime, time, date
+from typing import Any, Optional, Union
 
 class Column:
     nextkey = "nextkey"
@@ -81,9 +80,9 @@ class Column:
                 raise TypeError()
             return self.randomword.word()
         elif self.type == Dt.PRIMARY_KEY:
-            id = self.metadata.nextkey()
+            key: int = self.metadata.nextkey()
             self.metadata.incrementKey()
-            return id
+            return key
 
         # Types depending on another column
         elif self.type.value >= 2000:
@@ -96,7 +95,7 @@ class Column:
             val: Any = None
             if self.ownTable:
                 if thisId is None:
-                    raise KeyError(f'No key given')
+                    raise KeyError("No key given")
                 val = self.listener.get(thisId)
             else:
                 fk: Optional[int] = fKeys.get(self.metadata.foreignKeyColumn())
@@ -106,9 +105,32 @@ class Column:
             diff: int = self.metadata.diff()
 
             if self.type == Dt.LOWERTHAN_DATE:
+                assert isinstance(val, (datetime, date))
                 return numg.generateDate(fake, start=self.metadata.getStartWithMaxdiff(val), end=val - self.metadata.timeDiff())
             elif self.type == Dt.HIGHERTHAN_DATE:
+                assert isinstance(val, (datetime, date))
                 return numg.generateDate(fake, start=val + self.metadata.timeDiff(), end=self.metadata.getEndWithMaxdiff(val))
+            elif self.type == Dt.LOWERTHAN_TIME:
+                assert isinstance(val, (datetime, time))
+                if isinstance(val, time):
+                    val = datetime.combine(date.today(), val)
+                return numg.generateTime(fake, startTime=self.metadata.getStartTimeWithMaxDiff(val), endTime=(val - self.metadata.timeDiff()).strftime("%H:%M:%S"), timeRounding=self.metadata.timeRounding())
+            elif self.type == Dt.HIGHERTHAN_TIME:
+                assert isinstance(val, (datetime, time))
+                if isinstance(val, time):
+                    val = datetime.combine(date.today(), val)
+                return numg.generateTime(fake, startTime=(val + self.metadata.timeDiff()).strftime("%H:%M:%S"), endTime=self.metadata.getEndTimeWithMaxDiff(val), timeRounding=self.metadata.timeRounding())
+            elif self.type == Dt.LOWERTHAN_DATETIME or self.type == Dt.HIGHERTHAN_DATETIME:
+                assert isinstance(val, (datetime, date))
+                s: Union[datetime, date, str]
+                e: Union[datetime, date, str]
+                if self.type == Dt.LOWERTHAN_DATETIME:
+                    s = self.metadata.getStartWithMaxdiff(val)
+                    e = val - self.metadata.timeDiff()
+                else:
+                    s = val + self.metadata.timeDiff()
+                    e = self.metadata.getEndWithMaxdiff(val)
+                return numg.generateDateTime(fake, start=s, end=e, timeRounding=self.metadata.timeRounding())
             elif self.type == Dt.LOWERTHAN_INTEGER:
                 return numg.generateInt(self.metadata.getMinWithMaxdiff(val), val - diff)
             elif self.type == Dt.HIGHERTHAN_INTEGER:

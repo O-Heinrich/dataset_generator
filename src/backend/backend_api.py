@@ -32,6 +32,7 @@ def generateData(
     tables: dict[str, TableModel] = createTables(json, fake, noNewLine=noNewLine, dialect=dialect)
     return generateAndWriteQueries(list(tables.values()), targetPath, filemode=filemode, encoding=encoding)
 
+
 def createTables(
         json: Union[list[dict[str, Any]], dict[str, Any]],
         fake: Faker,
@@ -48,11 +49,13 @@ def createTables(
         data = [json]
     else:
         data = json
+    # Iterate over each table given by the data to create the TableModels
     for table in data:
         tablename: str = table["table"]
         if tablename in tables:
             raise exceptions.DuplicateTablenameException()
         columns: dict[str, Column] = {}
+        # Iterate over Columns for the table to create each Column
         for cName, cDesc in table["columns"].items():
             newColumn: Optional[Column]
             if isinstance(cDesc, str):
@@ -62,6 +65,7 @@ def createTables(
             else:
                 raise TypeError("Column description must be string or map")
             columns[newColumn.name] = newColumn
+            # Check for dependend type and add ColumnListener if necessary
             if newColumn.type.value >= 2000:
                 if not isinstance(cDesc, dict):
                     raise TypeError("Column description must be map for dependent types")
@@ -75,6 +79,7 @@ def createTables(
                 else:
                     raise KeyError()
                 newColumn.listenTo(listener)
+        # Create TableModel
         newTable: TableModel = TableModel(fake, tablename, columns, table.get("amount", amount), noNewLine, dialect)
         tables[tablename] = newTable
     return tables

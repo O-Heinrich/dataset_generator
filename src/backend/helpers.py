@@ -2,7 +2,7 @@ import datetime
 from enums.dialect import SqlDialect as SD
 import re
 
-from typing import Any;
+from typing import Any, Iterable;
 
 def stringifyValue(any: Any, dialect: SD, sep: str=", ") -> str:
     q: str = "\"" if dialect in [SD.DEFAULT] else "'"
@@ -25,7 +25,7 @@ def stringifyName(name: str, dialect: SD) -> str:
         return name if re.match(reg, name) else f'"{name}"'
     return name
 
-def createInsertQuery(tableName: str, columnNames: list[str], values: list[list[Any]], dialect: SD, noNewLine: bool=False) -> str:
+def createInsertQuery(tableName: str, columnNames: Iterable[str], values: list[list[Any]], dialect: SD, noNewLine: bool=False) -> str:
     query: str
 
     if dialect in [SD.DEFAULT, SD.POSTGRESQL]:

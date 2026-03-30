@@ -118,6 +118,10 @@ class ColumnFrame(Frame):
         elif p.typ == It.LIST_STRING:
             entry = ListEntry(self.windowFrame)
         elif p.typ == It.TIMEDICT:
+            entry = TimeDictEntry(self.windowFrame, doDate=False)
+        elif p.typ == It.DATEDICT:
+            entry = TimeDictEntry(self.windowFrame, doTime=False)
+        elif p.typ == It.DATETIMEDICT:
             entry = TimeDictEntry(self.windowFrame)
         elif p.typ == It.DATE:
             entry = DatetimeEntry(self.windowFrame, date=True)
@@ -130,7 +134,7 @@ class ColumnFrame(Frame):
             if p.typ in [It.STRING, It.INTEGER, It.FLOAT]:
                 assert isinstance(entry, Entry)
                 entry.insert(INSERT, str(p.default))
-            elif p.typ == It.TIMEDICT:
+            elif p.typ in [It.TIMEDICT, It.DATEDICT, It.DATETIMEDICT]:
                 assert isinstance(entry, TimeDictEntry)
                 entry.insertDict(p.default)
             elif p.typ in [It.DATE, It.TIME]:
@@ -206,7 +210,8 @@ class ColumnFrame(Frame):
         return result
 
     def _insertDictValue(self, pt: It, name: str, v: Any, dict: dict[str, Any]) -> None:
-        if not v:
+        if v is None:
+            # Don't attempt to insert a None value into the dictionary
             pass
         elif pt in [It.STRING, It.TABLE_KEY, It.TABLE_COLUMN, It.DATE, It.TIME]:
             dict[name] = str(v)
@@ -214,7 +219,7 @@ class ColumnFrame(Frame):
             dict[name] = int(v)
         elif pt == It.FLOAT:
             dict[name] = float(v)
-        elif pt == It.TIMEDICT:
+        elif pt in [It.TIMEDICT, It.DATEDICT, It.DATETIMEDICT]:
             dict[name] = v.toDict()
         elif pt == It.LIST_STRING:
             dict[name] = v
