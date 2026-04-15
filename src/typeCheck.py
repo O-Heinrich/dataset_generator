@@ -3,6 +3,11 @@ import subprocess
 import platform
 
 def typeCheck() -> None:
+    """
+    Runs mypy to enforce strict typing.
+    Exits the programm if mypy finds an error.
+    """
+
     # get python venv path
     python_path: str = ""
     if platform.system() == "Windows":

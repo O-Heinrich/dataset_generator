@@ -1,14 +1,16 @@
 from tkinter import *
 
 class ListEntry(Frame):
+    """A Widget, which contains all elements to enter a list of strings in the GUI."""
+
     def __init__(self, root: Frame) -> None:
         super().__init__(root)
         self._entry: Entry = Entry(self)
         self._entry.grid(column=0, row=0)
-        Button(self, text="Hinzufügen", command=self.write).grid(column=1, row=0)
+        Button(self, text="Hinzufügen", command=self._write).grid(column=1, row=0)
         self.entries: list[Label] = []
 
-    def write(self) -> None:
+    def _write(self) -> None:
         inp: str = self._entry.get()
         newLabel = Label(self, text=inp)
         newLabel.grid(column=0, row=1+len(self.entries))
@@ -19,4 +21,5 @@ class ListEntry(Frame):
         self._entry.delete(0, END)
 
     def get(self) -> list[str]:
+        """Return the list that is currently input into this ListEntry."""
         return [e["text"] for e in self.entries]

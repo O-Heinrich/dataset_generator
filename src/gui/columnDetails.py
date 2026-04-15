@@ -5,6 +5,7 @@ from enums.inputType import InputType as It
 from datetime import date, time, timedelta
 
 class ParameterDetails:
+    """Represents a possible Parameter for a Datatype."""
     def __init__(self, name: str, typ: It=It.STRING, required: bool=False, default: Any=None, description: str="") -> None:
         self.name: str = name
         self.typ: It = typ
@@ -13,7 +14,13 @@ class ParameterDetails:
         self.description: str = description
 
 class ColumnDetails:
+    """
+    Represents possible Datatypes for Columns and their possible Parameters.
+    The subtypes are for Datatypes which inherent the properties of another Datatype and may add more.
+    There may only be one layer deep nested subtypes, so a ColumnDetail which is in a subtypes may not have subtypes itself.
+    """
     def __init__(self, dt: Dt, parameters: dict[str, ParameterDetails]={}, subtypes: dict[str, Self]={}) -> None:
+        """There may only be one layer deep nested subtypes, so a ColumnDetail which is in a subtypes may not have subtypes itself."""
         self.type: Dt = dt
         self.parameters: dict[str, ParameterDetails] = parameters
         self.subtypes: dict[str, Self] = subtypes
@@ -26,7 +33,8 @@ FK_DESC: str = "Name des Schlüssels der\nanderen Tabelle. Optional wenn\ndie an
 MIN_DIFF: str = "Minimaler Unterschied"
 MAX_DIFF: str = "Maximaler Unterschied"
 
-allTypes: dict[str, ColumnDetails] = {
+# Constant containing all possible Datatypes, as well as all of their Parameters, which can be input in the GUI.
+ALL_TYPES: dict[str, ColumnDetails] = {
     "Primärschlüssel": ColumnDetails(Dt.PRIMARY_KEY, {"Nächste ID": ParameterDetails("nextkey", typ=It.INTEGER, default=0, description="Erster generierter Schlüssel")}),
     FK_NAME: ColumnDetails(Dt.FOREIGN_KEY, {"Primärschlüssel Spalte": ParameterDetails("column", typ=It.TABLE_KEY, required=True, description="Schlüsselspalte, auf auf\nwelche verwiesen werden soll")}),
     "Vorname": ColumnDetails(Dt.FIRST_NAME),

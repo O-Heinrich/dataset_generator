@@ -3,12 +3,11 @@ from wonderwords import RandomWord
 from backend.tableModel import TableModel
 import os
 import traceback
-import exceptions.exceptions as exceptions
+from exceptions.exceptions import DuplicateTablenameException
 from backend.column import Column
 from enums.datatypes import Datatype as Dt
 from backend.columnListener import ColumnListener
 from enums.dialect import SqlDialect as SD
-
 from typing import Any, Union, Optional
 
 def generateData(
@@ -21,9 +20,9 @@ def generateData(
         dialect: SD=SD.DEFAULT
 ) -> Optional[str]:
     """
-    API for generating SQL-Queries
-    Generates all queries according to the given json and Parameters
-    Returns the path under which the file was stored, or None on failure
+    API for generating SQL-Queries.
+    Generates all queries according to the given json and Parameters.
+    Returns the path under which the file was stored, or None on failure.
     """
     r: RandomWord = RandomWord()
     targetPath: str = targetFilePath or r.word() + "_" + r.word() + "_" + r.word() + ".sql"
@@ -40,9 +39,7 @@ def createTables(
         noNewLine: bool=False,
         dialect: SD=SD.DEFAULT
         ) -> dict[str, TableModel]:
-    """
-    Creates and returns tableModels according to the given json
-    """
+    """Creates and returns TableModels according to the given json."""
     tables: dict[str, TableModel] = {}
     data: list[dict[str, Any]]
     if not isinstance(json, list):
@@ -53,7 +50,7 @@ def createTables(
     for table in data:
         tablename: str = table["table"]
         if tablename in tables:
-            raise exceptions.DuplicateTablenameException()
+            raise DuplicateTablenameException()
         columns: dict[str, Column] = {}
         # Iterate over Columns for the table to create each Column
         for cName, cDesc in table["columns"].items():
@@ -65,7 +62,7 @@ def createTables(
             else:
                 raise TypeError("Column description must be string or map")
             columns[newColumn.name] = newColumn
-            # Check for dependend type and add ColumnListener if necessary
+            # Check for dependend type and add a ColumnListener if necessary
             if newColumn.type.value >= 2000:
                 if not isinstance(cDesc, dict):
                     raise TypeError("Column description must be map for dependent types")
@@ -92,8 +89,8 @@ def generateAndWriteQueries(
         encoding: str="utf-8"
                             ) -> Optional[str]:
     """
-    Generates all queries according to the given tables and stores them
-    Returns the path under which the query was stored
+    Generates all queries according to the given tables and stores them.
+    Returns the path under which the query was stored.
     """
     try:
         with open(targetPath, filemode, encoding=encoding) as file:

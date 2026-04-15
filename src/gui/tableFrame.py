@@ -5,39 +5,57 @@ from gui.labelWithExtras import LabelWithExtras
 from enums.datatypes import Datatype as Dt
 
 class TableFrame(Frame):
+    """
+    A Frame containing all Widgets for a single Table, including
+    a delete Button,
+    an Entry field for the name and the amount of datasets to generate,
+    a Button to add Columns
+    and Frames for each Column.
+    """
+
     def __init__(self,
                  root: Widget,
-                 keyColumnLambda: Callable[[Self, ColumnFrame], list[str]],
-                 columnLambda: Callable[[Dt, Self, ColumnFrame], list[str]],
-                 cleanupFunc: Callable[[Self], None]
+                 keyColumnLambda: Callable[[Self, ColumnFrame], list[str]], # Function, that returns all valid key Column names
+                 columnLambda: Callable[[Dt, Self, ColumnFrame], list[str]], # Function, that returns all valid Column names
+                 cleanupFunc: Callable[[Self], None] # Function to be called, when this Frame is destroyed
                  ) -> None:
         super().__init__(root)
         self._keyColumnLambda: Callable[[ColumnFrame], list[str]] = lambda column: keyColumnLambda(self, column)
         self._columnLambda: Callable[[Dt, ColumnFrame], list[str]] = lambda dt, column: columnLambda(dt, self, column)
         self._cleanupFunc: Callable[[], None] = lambda: cleanupFunc(self)
 
+        # Entry for name
         LabelWithExtras(self, text="Tabellenname:", required=True).grid(column=0, row=0)
         validateName: str = (self.register(lambda P: str(P).replace("_", "").isalnum() and str(P).isascii()))
         self.entryName: Entry = Entry(self, validate="all", validatecommand=(validateName, "%P"))
         self.entryName.grid(column=1, row=0)
 
+        # Entry for amount of datasets to generate
         vcmd: str = (self.register(lambda P: str.isdigit(P) or P == ""))
         Label(self, text="Anzahl Datensätze:").grid(column=0, row=1)
         self.entryAmount: Entry = Entry(self, validate="all", validatecommand=(vcmd, "%P"))
         self.entryAmount.grid(column=1, row=1)
         self.entryAmount.insert(INSERT, "20")
 
+        # Adding and deleting Columns and ColumnFrames
         Label(self, text="Tabellenspalten:").grid(column=0, row=2)
-        Button(self, text="Neue Spalte", command=self.newColumn).grid(column=1, row=2)
-        Button(self, text="Tabelle löschen", command=self.removeSelf).grid(column=2, row=2)
+        Button(self, text="Neue Spalte", command=self._newColumn).grid(column=1, row=2)
         self.columns: list[ColumnFrame] = []
 
-    def newColumn(self) -> None:
-        newColumn = ColumnFrame(self, self._keyColumnLambda, self._columnLambda, self.removeColumn)
+        # delete Button
+        Button(self, text="Tabelle löschen", command=self._removeSelf).grid(column=2, row=2)
+
+    def _newColumn(self) -> None:
+        """Creates a new ColumnFrame."""
+        newColumn = ColumnFrame(self, self._keyColumnLambda, self._columnLambda, self._removeColumn)
         newColumn.grid(column=1, row=3+len(self.columns))
         self.columns.append(newColumn)
 
     def isFilled(self) -> str:
+        """
+        Returns an empty string when all required Entries that are part of this Frame have a valid input, making this Table valid to be sent to the backend.
+        If something is missing or invalid, an error message is returned instead.
+        """
         if not self.entryName.get():
             return "Fehlender Tabellenname"
         if len(self.columns) == 0:
@@ -49,15 +67,21 @@ class TableFrame(Frame):
         return ""
     
     def readValues(self) -> dict[str, Union[str, dict, int]]:
+        """
+        Returns a dictionary according to the json required by the backend for each Table.
+        The dictionary contains the name, columns and amount of datasets for this Table.
+        """
         return {
             "table": self.entryName.get(),
             "columns": {e.readKey(): e.readValue() for e in self.columns},
             "amount": int(self.entryAmount.get()) if self.entryAmount.get() else 20
         }
 
-    def removeColumn(self, column: ColumnFrame) -> None:
+    def _removeColumn(self, column: ColumnFrame) -> None:
+        """Removes a specified ColumnFrame from this Frame."""
         self.columns.remove(column)
 
-    def removeSelf(self) -> None:
+    def _removeSelf(self) -> None:
+        """Deletes this TableFrame and calls the cleanup function before."""
         self._cleanupFunc()
         self.destroy()

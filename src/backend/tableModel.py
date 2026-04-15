@@ -1,12 +1,13 @@
 from faker import Faker
 from backend.column import Column
-from backend.helpers import createInsertQuery
+from backend.queryCreator import createInsertQuery
 from enums.datatypes import Datatype as Dt
 from enums.dialect import SqlDialect as SD
-
 from typing import Optional, Any
 
 class TableModel:
+    """Represents one table, consisting of Columns."""
+
     def __init__(self, fake: Faker, tablename: str, columns: dict[str, Column], amount: int, noNewlines: bool=False, dialect: SD=SD.DEFAULT):
         self.fake: Faker = fake
         self.columns: dict[str, Column] = columns
@@ -23,6 +24,7 @@ class TableModel:
         self.dialect: SD = dialect
 
     def generate(self) -> str:
+        """Generates values for this table and passes them to queryCreator to turn them into an SQL-Query."""
         generatedValues: list[list[Any]] = []
         for _ in range(self.amount):
             key: Optional[int] = None

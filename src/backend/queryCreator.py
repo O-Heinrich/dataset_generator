@@ -1,10 +1,10 @@
 import datetime
 from enums.dialect import SqlDialect as SD
 import re
-
-from typing import Any, Iterable;
+from typing import Any, Iterable
 
 def stringifyValue(any: Any, dialect: SD, sep: str=", ") -> str:
+    """Turns a value into a raw string that can be part of the SQL-Query, fitting the dialect given."""
     q: str = "\"" if dialect in [SD.DEFAULT] else "'"
     if type(any) is str:
         return f'{q}{any.replace(q, f'{q}{q}')}{q}'
@@ -20,12 +20,18 @@ def stringifyValue(any: Any, dialect: SD, sep: str=", ") -> str:
         return str(any)
 
 def stringifyName(name: str, dialect: SD) -> str:
+    """Turns the name of a table or column into a raw string that can be part of the SQL-Query, fitting the dialect given."""
     if dialect in [SD.POSTGRESQL]:
         reg: str = r'^[a-z\d]+$'
         return name if re.match(reg, name) else f'"{name}"'
     return name
 
 def createInsertQuery(tableName: str, columnNames: Iterable[str], values: list[list[Any]], dialect: SD, noNewLine: bool=False) -> str:
+    """
+    Creates an SQL-query from given values, fitting the dialect given.
+    This works independent from other logic.
+    """
+    # Any changes to the actual output string and dialects should happen in here or the used functions
     query: str
 
     if dialect in [SD.DEFAULT, SD.POSTGRESQL]:

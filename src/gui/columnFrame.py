@@ -1,5 +1,5 @@
 from tkinter import *
-from gui.columnDetails import allTypes, ColumnDetails, ParameterDetails
+from gui.columnDetails import ALL_TYPES, ColumnDetails, ParameterDetails
 from typing import Optional, Callable, Self, Union, Any
 from gui.listEntry import ListEntry
 from gui.timeDictEntry import TimeDictEntry
@@ -10,58 +10,79 @@ from enums.inputType import InputType as It
 from enums.datatypes import Datatype as Dt
 
 class ColumnFrame(Frame):
+    """
+    A Frame containing all Widgets for a single Column, including
+    a delete Button,
+    an Entry field for the name,
+    an OptionMenu for the Datatype,
+    Radiobuttons to choose between regular and independend types (subtypes)
+    and Entry Widgets for Parameters, depending on the inserted Datatype, which can be opened in a seperate Popup Window.
+    """
+
     def __init__(self,
                  root: Frame,
-                 keyColumnLambda: Callable[[Self], list[str]],
-                 columnLambda: Callable[[Dt, Self], list[str]],
-                 cleanupFunc: Callable[[Self], None]
+                 keyColumnLambda: Callable[[Self], list[str]], # Function, that returns all valid key Column names
+                 columnLambda: Callable[[Dt, Self], list[str]], # Function, that returns all valid Column names
+                 cleanupFunc: Callable[[Self], None] # Function to be called, when this Frame is destroyed
                  ) -> None:
         super().__init__(root)
         self._keyColumnLambda: Callable[[], list[str]] = lambda: keyColumnLambda(self)
         self._columnLambda: Callable[[Dt], list[str]] = lambda dt: columnLambda(dt, self)
         self._cleanupFunc: Callable[[], None] = lambda: cleanupFunc(self)
+        # validators
         self._validateInt: str = (self.register(lambda P: str.isdigit(P) or P == ""))
         self._validateFloat: str = (self.register(lambda P: P == "" or (all(char in "0123456789." for char in P[1:]) and P[0] in "0123456789.-" and P.count(".") <= 1)))
 
-        Button(self, text="Spalte löschen", command=self.removeSelf).grid(column=0, row=0)
+        # delete Button
+        Button(self, text="Spalte löschen", command=self._removeSelf).grid(column=0, row=0)
 
+        # Entry for name
         LabelWithExtras(self, text="Spaltenname:", required=True).grid(column=1, row=0)
         validateName: str = (self.register(lambda P: str(P).replace("_", "").isalnum() and str(P).isascii()))
         self.entryName: Entry = Entry(self, validate="all", validatecommand=(validateName, "%P"))
         self.entryName.grid(column=2, row=0)
 
-        typeOptions: list[str] = list(allTypes.keys())
+        # Entry for Datatype
+        typeOptions: list[str] = list(ALL_TYPES.keys())
         self.entryType: StringVar = StringVar(self)
         self.entryType.set("")
         LabelWithExtras(self, text="Spaltentyp:", required=True).grid(column=3, row=0)
-        OptionMenu(self, self.entryType, *typeOptions, command=self.onTypeChoice).grid(column=4, row=0)
+        OptionMenu(self, self.entryType, *typeOptions, command=self._onTypeChoice).grid(column=4, row=0)
         self.lastTyp: Optional[str] = None
 
+        # Parameters
         self.cd: Optional[ColumnDetails] = None
         self.parameterLabels: list[LabelWithExtras] = []
         self.parameterEntries: dict[str, Union[Entry, ColumnEntry, ListEntry, TimeDictEntry, DatetimeEntry]] = {}
+        # Radiobuttons for subtypes
         self.radiobuttons: list[Radiobutton] = []
         self.radioValue: Optional[StringVar] = None
         self.extraParameterLabels: list[LabelWithExtras] = []
         self.extraParameterEntries: dict[str, Union[Entry, ColumnEntry, ListEntry, TimeDictEntry, DatetimeEntry]] = {}
+        # Popup Window
         self.popupButton: Optional[Button] = None
         self.window: Optional[Toplevel] = None
         self.windowFrame: Optional[Frame] = None
 
-    def onTypeChoice(self, var: Union[StringVar, str]) -> None:
+    def _onTypeChoice(self, var: Union[StringVar, str]) -> None:
+        """Executed on changing the Datatype for this Column, to update the Radiobuttons and Parameters"""
         typ: str = var.get() if isinstance(var, StringVar) else var
         if typ == self.lastTyp:
             return
         self.lastTyp = typ
+
+        # cleanup
         clearWidgets([self.parameterLabels, self.parameterEntries, self.radiobuttons, self.extraParameterLabels, self.extraParameterEntries])
         if self.window:
             self.window.destroy()
+        # create new Popup Window
         self.window = Toplevel()
         self.windowFrame = Frame(self.window)
 
-        self.cd = allTypes.get(typ)
+        self.cd = ALL_TYPES.get(typ)
         if not self.cd:
             raise KeyError()
+        # create Entries for Parameters
         columnCount: int = 1
         for p in self.cd.parameters:
             pn: Optional[ParameterDetails] = self.cd.parameters.get(p)
@@ -71,8 +92,9 @@ class ColumnFrame(Frame):
             label.grid(column=columnCount, row=0)
             self.parameterLabels.append(label)
 
-            self.createEntry(par, columnCount, self.parameterEntries)
+            self._createEntry(par, columnCount, self.parameterEntries)
             columnCount += 1
+        # create Radiobuttons for subtypes
         if self.cd.subtypes:
             rowCount: int = 1
             self.radioValue = StringVar(value="NORMAL")
@@ -81,15 +103,16 @@ class ColumnFrame(Frame):
             rd.grid(column=0, row=rowCount)
             for st in self.cd.subtypes:
                 rowCount += 1
-                rdb: Radiobutton = Radiobutton(self.windowFrame, text=st, variable=self.radioValue, value=st, command=self.createSubEntries)
+                rdb: Radiobutton = Radiobutton(self.windowFrame, text=st, variable=self.radioValue, value=st, command=self._createSubEntries)
                 self.radiobuttons.append(rdb)
                 rdb.grid(column=0, row=rowCount)
 
+        # Button for Popup Window
         if self.popupButton:
             self.popupButton.destroy()
             self.popupButton = None
         if len(self.parameterLabels) + len(self.radiobuttons) + len(self.extraParameterLabels) > 0:
-            self.popupButton = Button(self, text="Optionen", command=self.popupParameters)
+            self.popupButton = Button(self, text="Optionen", command=self._popupParameters)
             self.popupButton.grid(column=5, row=0)
             self.windowFrame.grid(column=0, row=0)
             Button(self.windowFrame, text="Schließen", command=self.window.withdraw).grid(column=0, row=0)
@@ -100,7 +123,11 @@ class ColumnFrame(Frame):
             self.window = None
             self.windowFrame = None
 
-    def createEntry(self, p: ParameterDetails, column: int, entrydict: dict[str, Union[Entry, ColumnEntry, ListEntry, TimeDictEntry, DatetimeEntry]]) -> None:
+    def _createEntry(self, p: ParameterDetails, column: int, entrydict: dict[str, Union[Entry, ColumnEntry, ListEntry, TimeDictEntry, DatetimeEntry]]) -> None:
+        """
+        Creates an Entry Widget to enter a Parameter with the given Parameterdetails.
+        Adds the new Entry to this Frames Popup Window and to the given entrydict.
+        """
         assert self.window and self.windowFrame
         entry: Union[Entry, ColumnEntry, ListEntry, TimeDictEntry, DatetimeEntry]
         if p.typ == It.STRING:
@@ -144,25 +171,33 @@ class ColumnFrame(Frame):
                 raise NotImplementedError()
         entrydict[p.name] = entry
 
-    def createSubEntries(self) -> None:
+    def _createSubEntries(self) -> None:
+        """Executed on changing the subtype for this Column with the Radiobuttons, to update the Parameters with potential new Parameters"""
         assert self.window and self.windowFrame
+        # cleanup
         clearWidgets([self.extraParameterLabels, self.extraParameterEntries])
+
         columnCount: int = 1 + len(self.parameterEntries)
         assert self.cd and self.radioValue
         ocd: Optional[ColumnDetails] = self.cd.subtypes.get(self.radioValue.get())
         assert ocd
         cd: ColumnDetails = ocd
+        # create Entries for Parameters
         for p in cd.parameters:
             opar: Optional[ParameterDetails] = cd.parameters.get(p)
             assert opar
             par: ParameterDetails = opar
-            label:LabelWithExtras = LabelWithExtras(self.windowFrame, p, required=par.required, description=par.description)
+            label: LabelWithExtras = LabelWithExtras(self.windowFrame, p, required=par.required, description=par.description)
             label.grid(column=columnCount, row=0)
             self.extraParameterLabels.append(label)
-            self.createEntry(par, columnCount, self.extraParameterEntries)
+            self._createEntry(par, columnCount, self.extraParameterEntries)
             columnCount += 1
 
     def isFilled(self) -> str:
+        """
+        Returns an empty string when all required Entries that are part of this Frame have a valid input, making this Column valid to be sent to the backend.
+        If something is missing or invalid, an error message is returned instead.
+        """
         if not self.entryName.get():
             return "Fehlender Spaltenname"
         if not self.entryType.get():
@@ -183,15 +218,22 @@ class ColumnFrame(Frame):
                     return f'Spalte {self.entryName.get()} benötigt Parameter {p.name}'
         return ""
 
-    def popupParameters(self) -> None:
+    def _popupParameters(self) -> None:
+        """Opens the Popup Window for the Radiobuttons and Parameters."""
         assert self.window
         self.window.deiconify()
 
     def readKey(self) -> str:
+        """Returns the name that was input for this Column."""
         return self.entryName.get()
 
     def readValue(self) -> Union[str, dict[str, Any]]:
-        ocd: Optional[ColumnDetails] = allTypes.get(self.entryType.get())
+        """
+        Returns a dictionary according to the json required by the backend for each Column.
+        May return just the name of the Datatype, if no Parameters where given,
+        otherwise the dictionary contains the type, aswell as all Parameters that have a valid input.
+        """
+        ocd: Optional[ColumnDetails] = ALL_TYPES.get(self.entryType.get())
         assert ocd
         cd: ColumnDetails = ocd
         result: dict[str, Any] = {"type": cd.type.name}
@@ -210,8 +252,9 @@ class ColumnFrame(Frame):
         return result
 
     def _insertDictValue(self, pt: It, name: str, v: Any, dict: dict[str, Any]) -> None:
+        """Insert the value into the given dictionary, and cast it depending on the given InputType."""
         if v is None:
-            # Don't attempt to insert a None value into the dictionary
+            # Ignore attempts to insert a None value into the dictionary
             pass
         elif pt in [It.STRING, It.TABLE_KEY, It.TABLE_COLUMN, It.DATE, It.TIME]:
             dict[name] = str(v)
@@ -226,11 +269,13 @@ class ColumnFrame(Frame):
         else:
             raise NotImplementedError()
 
-    def removeSelf(self) -> None:
+    def _removeSelf(self) -> None:
+        """Deletes this ColumnFrame and calls the cleanup function before."""
         self._cleanupFunc()
         self.destroy()
 
 def clearWidgets(widgets: list[Union[list, dict]]) -> None:
+    """Destroys all widgets in the given lists and dictionaries and clears all the given lists and dictionaries."""
     for l in widgets:
         for w in (l if isinstance(l, list) else l.values()):
             assert isinstance(w, Widget)

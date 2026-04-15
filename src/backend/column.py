@@ -12,7 +12,7 @@ from datetime import datetime, time, date
 from typing import Any, Optional, Union
 
 class Column:
-    nextkey = "nextkey"
+    """Represents one column in a TableModel and consists of a name, a Datatype and Metadata."""
 
     def __init__(self, name: str, type: Dt, metadata: dict[str, Any]={}):
         self.name: str = name
@@ -26,7 +26,13 @@ class Column:
         self.ownTable: bool = False
         
     def getValue(self, fake: Faker, id: Optional[int]=None, fKeys: dict[str, int]={}) -> Any:
-        value = self.generateValue(fake, fKeys, id)
+        """
+        Generates and returns a single generated value.
+        If this Column has ColumnListeners listening to it, id shall not be None and the value is passed to those ColumnListeners.
+        The fKeys dictionary is a mapping of names of FOREIGN_KEY Columns, to their relevant generated id.
+        The fKeys dictionary is modified if this Column has the Datatypoe FOREIGN_KEY.
+        """
+        value = self._generateValue(fake, fKeys, id)
         if len(self.listeners) >= 1:
             if id is None:
                 raise KeyError("ID cannot be None")
@@ -34,7 +40,8 @@ class Column:
                 l.add(id, value)
         return value
 
-    def generateValue(self, fake: Faker, fKeys: dict[str, int]={}, thisId: Optional[int]=None) -> Any:
+    def _generateValue(self, fake: Faker, fKeys: dict[str, int]={}, thisId: Optional[int]=None) -> Any:
+        """Generates a single value for this Column."""
         if self.type == Dt.FIRST_NAME:
             return ng.generateFirstName(fake)
         elif self.type == Dt.LAST_NAME:
@@ -90,7 +97,7 @@ class Column:
                 raise TypeError()
             if self.type == Dt.FOREIGN_KEY:
                 fKey: int = self.listener.randomKey()
-                fKeys[self.metadata.foreignColumn()] = fKey
+                fKeys[self.metadata.foreignColumn()] = fKey # Register this FOREIGN_KEYs value to the fKeys dictionary.
                 return fKey
             val: Any = None
             if self.ownTable:
@@ -146,15 +153,19 @@ class Column:
             raise NotImplementedError()
     
     def predictKey(self) -> int:
+        """Returns the unique integer key, that will be generated for this Column next."""
         if self.type == Dt.PRIMARY_KEY:
             return self.metadata.nextkey()
         raise TypeError("Can only predict key for primary key columns")
 
     def addListener(self, listener):
+        """Adds a ColumnListener, that will listen to this Columns values."""
         self.listeners.append(listener)
 
     def listenTo(self, listener):
+        """Registers the ColumnListener, which listens to the Column, that this Column depends on, if this Column has a dependend Datatype."""
         self.listener = listener
 
     def __str__(self):
+        """Returns the name of this Column."""
         return self.name

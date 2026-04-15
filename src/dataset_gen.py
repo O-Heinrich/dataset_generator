@@ -5,11 +5,11 @@ from backend.backend_api import generateData
 from typing import Union
 from typeCheck import typeCheck
 
+# static type checking with mypy
 typeCheck()
 
-# allow parsing arguments on commmand line
+# allow passing arguments on commmand line
 parser = argparse.ArgumentParser()
-
 parser.add_argument('-l', action="store", dest="location", default="de_DE")
 parser.add_argument('-e', action="store", dest="encoding", default="utf-8")
 parser.add_argument('-p', action="store", dest="jsonfile", default="example.json")
@@ -20,7 +20,6 @@ parser.add_argument('-n', action="store", dest="amount", type=int, default=20)
 parser.add_argument('--oneline', action="store_true", dest="noNewline", default=False)
 parser.add_argument('-d', action="store", dest="sqlDialect", default="")
 
-# get input arguments
 parsed: argparse.Namespace = parser.parse_args()
 localization: str = parsed.location
 encoding: str = parsed.encoding
@@ -32,11 +31,13 @@ amount: int = parsed.amount
 noNewline: bool = parsed.noNewline
 sqlDialect: str = parsed.sqlDialect
 
+# parse values for filemode and sql dialect
 filemode: str = "w" if overwriteMode else "a" if appendMode else "x"
 dialect: SD = SD.DEFAULT
 if sqlDialect:
     dialect = toDialect(sqlDialect)
 
+# call backend api and generate queries
 with open(jsonPath, 'r') as jsonfile:
     data: Union[list[dict], dict] = json.load(jsonfile)
     generateData(data, targetPath, filemode=filemode, noNewLine=noNewline, localization=localization, encoding=encoding, dialect=dialect)

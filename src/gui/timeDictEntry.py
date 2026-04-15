@@ -3,6 +3,8 @@ from gui.timeDict import TimeDict
 from typing import Optional
 
 class TimeDictEntry(Frame):
+    """A Widget, which contains all elements to enter a TimeDict in the GUI."""
+
     def __init__(self, root: Frame, doDate: bool=True, doTime: bool=True) -> None:
         super().__init__(root)
         vcdm: str = (self.register(lambda P: str.isdigit(P) or P == ""))
@@ -36,6 +38,7 @@ class TimeDictEntry(Frame):
             self._seconds.grid(column=1, row=4)
 
     def get(self) -> TimeDict:
+        """Return the TimeDict that is currently input into this TimeDictEntry."""
         return TimeDict(
             days=0 if not (self._days and self._days.get()) else int(self._days.get()),
             weeks=0 if not (self._weeks and self._weeks.get()) else int(self._weeks.get()),
@@ -45,6 +48,7 @@ class TimeDictEntry(Frame):
         )
     
     def insertDict(self, dict: TimeDict) -> None:
+        """Set the input of this TimeDictEntry to the given TimeDict."""
         if self._days:
             self._days.insert(INSERT, str(dict.days))
         if self._weeks:

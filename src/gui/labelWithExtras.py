@@ -2,6 +2,8 @@ from tkinter import *
 from tktooltip import ToolTip
 
 class LabelWithExtras(Frame):
+    """A Widget containing a Label, which additionally may have a symbol highlighting it's mandatory or a description on hover."""
+
     def __init__(self, root: Frame, text: str, required: bool=False, description: str="") -> None:
         super().__init__(root)
         label: Label = Label(self, text=text)

@@ -1,6 +1,8 @@
 # dataset_generator
 
-Dies ist ein Script zum Generieren von Beispiel-Datensätzen für relationale Datenbanken. Es nimmt eine json Konfigurationsdatei entgegen und schreibt einen SQL-Befehl in eine Datei. Die json kann über eine GUI konfiguriert werden.
+Dies ist ein Script zum Generieren von Beispiel-Datensätzen für relationale Datenbanken. Es nimmt eine json
+Konfigurationsdatei entgegen und schreibt einen SQL-Befehl in eine Datei. Die json kann über eine GUI konfiguriert
+werden.
 
 ## Setup
 
@@ -97,7 +99,8 @@ Folgende Optionen können an den Befehl angehangen werden:
 
 #### Config
 
-Die Konfiguration geschieht dabei über eine json Datei, in welcher der Name der Tabelle sowie die Art der zu generierenden Daten festgelegt werden kann. Beispielhaft siehe example.json. Die json hat folgende Felder:
+Die Konfiguration geschieht dabei über eine json Datei, in welcher der Name der Tabelle sowie die Art der zu
+generierenden Daten festgelegt werden kann. Beispielhaft siehe example.json. Die json hat folgende Felder:
 
 | Feldname | Typ | | Beschreibung |
 | - | - | - | - |
@@ -147,7 +150,8 @@ Die Tabellennamen dürfen sich hier nicht wiederholen.
 
 ##### Columns
 
-Das Columns Feld enthält die Namen der Spalten als Schlüssel und die Beschreibung des jeweiligen Datentyps als Wert. Zum Beispiel:
+Das Columns Feld enthält die Namen der Spalten als Schlüssel und die Beschreibung des jeweiligen Datentyps als Wert.
+Zum Beispiel:
 
 ```json
 "feldname1": "FIRST_NAME",
@@ -157,7 +161,9 @@ Das Columns Feld enthält die Namen der Spalten als Schlüssel und die Beschreib
 }
 ```
 
-Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder als Map in welcher der Typ mit dem Schlüssel "type" vorliegt sowie weitere Parameter. Für manche Typen sind bestimmte Parameter zwangsweise notwendig. Folgende Typen werden unterstützt:
+Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder als Map in welcher der Typ mit dem
+Schlüssel "type" vorliegt sowie weitere Parameter. Für manche Typen sind bestimmte Parameter zwangsweise notwendig.
+Folgende Typen werden unterstützt:
 
 | Typ | Beschreibung | Parameter | Default | Beschreibung |
 | - | - | - | - | - |
@@ -193,7 +199,8 @@ Der Datentyp kann als einzelner String angegeben werden (case-insensitive), oder
 | FORMAT_STRING | String, der dem angegebenen regex matched | regex | | required - regex, dem der zufällige String matchen soll |
 | RANDOM_STRING | Zufälliges englisches Wort | | | |
 
-Für logisch innerhalb einres Datensatzes voneinander abhängige Spalten können die folgenden Typen verwendet werden. Diese benötigen immer den Parameter "column", welcher der Name der Spalte ist, von dem der Wert abhängen soll:
+Für logisch innerhalb einres Datensatzes voneinander abhängige Spalten können die folgenden Typen verwendet werden.
+Diese benötigen immer den Parameter "column", welcher der Name der Spalte ist, von dem der Wert abhängen soll:
 
 ```json
 "someint": {
@@ -207,7 +214,9 @@ Für logisch innerhalb einres Datensatzes voneinander abhängige Spalten können
 }
 ```
 
-Parameter, welche für den anderen Typen verfügbar sind, sind auch für diese Typen, soweit sinnvoll, verfügbar. Soll die Spalte von einer Spalte aus einer anderen Tabelle abhängen, so muss
+Parameter, welche für den anderen Typen verfügbar sind, sind auch für diese Typen, soweit sinnvoll, verfügbar. Soll die
+Spalte von einer Spalte aus einer anderen Tabelle abhängen, so muss
+
 - ein FOREIGN_KEY vorhanden sein
 - der Parameter fk vorhanden sein, welcher equivalent zum "column" Parameter des FOREIGN_KEY ist
 - der column Parameter die Form "andereTabelle.andereSpalte" haben
@@ -247,13 +256,13 @@ Folgende Typen werden unterstützt:
 | Typ | referenzierter Typ | Beschreibung | Parameter | Default | Beschreibung |
 | - | - | - | - | - | - |
 | LOWERTHAN_INTEGER | INTEGER | Ganzzahl, welche kleiner als der Wert in der verknüpften Spalte ist | diff | 0 | Wert, um welchen der generierte Wert mindestens kleiner sein muss |
-| | | maxdiff | | Wert, um welchen der generierte Wert höchstens kleiner sein darf |
+| | | | maxdiff | | Wert, um welchen der generierte Wert höchstens kleiner sein darf |
 | HIGHERTHAN_INTEGER | INTEGER | Ganzzahl, welche größer oder gleich dem Wert in der verknüpften Spalte ist | diff | 0 | Wert, um welchen der generierte Wert mindestens größer sein muss |
-| | | maxdiff | | Wert, um welchen der generierte Wert höchstens größer sein darf |
+| | | | maxdiff | | Wert, um welchen der generierte Wert höchstens größer sein darf |
 | LOWERTHAN_FLOAT | FLOAT | Gleitkommazahl, welche kleiner als der Wert in der verknüpften Spalte ist | diff | 0 | siehe LOWERTHAN_INTEGER |
-| | | maxdiff | | siehe LOWERTHAN_INTEGER |
+| | | | maxdiff | | siehe LOWERTHAN_INTEGER |
 | HIGHERTHAN_FLOAT | FLOAT | Gleitkommazahl, welche größer oder gleich dem Wert in der verknüpften Spalte ist | diff | 0 | siehe HIGHERTHAN_INTEGER |
-| | | maxdiff | | siehe HIGHERTHAN_INTEGER |
+| | | | maxdiff | | siehe HIGHERTHAN_INTEGER |
 | LOWERTHAN_DATE | DATE, DATE_TIME | Datum, welches vor oder gleich dem Datum der verknüpften Spalte ist | timeDiff | {} |  Mapping, welches angibt um wieviel das generierte Datum mindestens kleiner sein muss. Die Schlüssel können eine beliebige Kombination aus "days", "weeks", "hours", "minutes" oder "seconds" sein und die Werte der entsprechende Unterschied |
 | | | | timeMaxdiff | | Mapping, welches angibt um wieviel das generierte Datum maximal kleiner sein darf, siehe timeDiff |
 | HIGHERTHAN_DATE | DATE, DATE_TIME | Datum, welches nach oder gleich dem Datum der verknüpften Spalte ist | timeDiff | {} | siehe LOWERTHAN_DATE |
@@ -266,3 +275,41 @@ Folgende Typen werden unterstützt:
 | | | | timeMaxdiff | | siehe LOWERTHAN_DATE |
 | HIGHERTHAN_DATETIME | DATE_TIME, DATE | Datum mit Uhrzeit, welches nach oder gleich dem Zeitpunkt der verknüpften Spalte ist | timeDiff | {} | siehe LOWERTHAN_DATE |
 | | | | timeMaxdiff | | siehe LOWERTHAN_DATE |
+
+## Code
+
+Der Code liegt im src Ordner und ist dort weiter unterteilt. Die auf der obersten Ebene liegenden Dateien sind die
+ausführbaren Dateien dataset_gen.py und gui_gen.py sowie die typeCheck.py, welche striktere Typisierung sicherstellt.
+Der Programmcode ist außerdem in backend und frontend (gui) unterteilt. Der enums Ordner enthält Enumerationstypen und
+der exceptions Ordner verwendetet custom Exceptions, welche jeweils sowohl vom frontend als auch vom backend verwendet
+werden könnten.
+
+### dataset_gen.py
+
+Die dataset_gen.py dient zur Nutzung ohne GUI, also mittels einer .json Konfigurationsdatei. Es hängt in keiner Form
+vom frontend ab und nutzt lediglich die API des backends.
+
+### gui_gen.py
+
+Die gui_gen.py ruft lediglich das frontend auf, dient also zum Öffnen des Programms via GUI.
+
+### typeCheck.py
+
+Dient zur strikten Typisierung und prüft diese mittels mypy und schließt das Programm vorzeitig bei Fehlern.
+
+### backend
+
+Die grobe Struktur des backends besteht aus dem TableModel, welches eine Datenbanktabelle repräsentiert, während die
+Spalten durch Column dargestellt werden. Die Zufallsgeneration von Daten mittels Faker, wonderwords und xeger passiert in
+addressGenerator, nameGenerator und numbersGenerator. Die Logik, inklusive der Erstellung der TableModel, passiert in
+backend_api.py, welche zudem die Schnittstelle, welche vom frontend bzw. dataset_gen.py genutzt wird, bereitstellt. Für
+Details siehe die jeweiligen Klassen/Dateien.
+
+### gui
+
+Die GUI ist mit tkinter gebaut und benutzt zum größten Teil den grid Geometry Manager. Die Ausnahme sind die
+Scrollbars. Auf der obersten Ebene ist App, welche zudem in gui_gen.py verwendet wird. Darin verschachtelt sind die
+Frames TableFrame und ColumnFrame, welche je Tabellen und ihre Spalten darstellen. In columnDetails.py sind alle
+verfügbaren Datentypen und ihre Parameter hinterlegt. Zudem stehen mit ColumnEntry, DatetimeEntry, LabelWithExtras,
+ListEntry und TimeDictEntry custom Widgets bereit. Für Details siehe die jeweiligen Klassen/Dateien.
+

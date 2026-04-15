@@ -5,6 +5,8 @@ from typing import Optional, Any, Union
 from datetime import date, time
 
 class DatetimeEntry(Frame):
+    """A Widget, which contains all elements to enter a datetime, date or time in the GUI."""
+
     def __init__(self, root: Frame, date: bool=False, time: bool=False) -> None:
         assert date or time
         assert not (date and time)
@@ -19,6 +21,7 @@ class DatetimeEntry(Frame):
             self._clock.grid(column=0, row=0)
 
     def get(self) -> str:
+        """Return a string representation of the datetime, date or time that is currently input into this DatetimeEntry."""
         assert self._calendar or self._clock
         if self._calendar:
             d: Any = self._calendar.selection_get()
@@ -31,6 +34,7 @@ class DatetimeEntry(Frame):
             raise NotImplementedError()
         
     def insertDatetime(self, dt: Union[date, time]) -> None:
+        """Set the input of this DatetimeEntry to the given date or time."""
         if isinstance(dt, date):
             assert self._calendar
             self._calendar.destroy()

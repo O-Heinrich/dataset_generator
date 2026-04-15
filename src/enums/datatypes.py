@@ -1,6 +1,11 @@
 from enum import Enum
 
 class Datatype(Enum):
+    """
+    Enumeration representing datatypes of table columns.
+    The value 0 is the default value and dependend types do have values greater or equal 2000.
+    """
+    # Used by both backend and frontend
     
     DEFAULT = 0 # Default type, for no logic
 

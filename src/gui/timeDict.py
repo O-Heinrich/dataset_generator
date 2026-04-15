@@ -1,4 +1,6 @@
 class TimeDict:
+    """Represents a possible timedelta object and can be transformed into a dictionary."""
+
     def __init__(self, days: int=0, weeks: int=0, hours: int=0, minutes: int=0, seconds: int=0):
         self.days: int = days
         self.weeks: int = weeks
@@ -7,4 +9,5 @@ class TimeDict:
         self.seconds: int = seconds
 
     def toDict(self) -> dict[str, int]:
+        """Transforms this into a dictionary."""
         return {"days":self.days,"weeks":self.weeks,"hours":self.hours,"minutes":self.minutes,"seconds":self.seconds}
