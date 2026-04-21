@@ -37,15 +37,18 @@ class TimeDictEntry(Frame):
             self._seconds = Entry(self, validate="all", validatecommand=(vcdm, "%P"))
             self._seconds.grid(column=1, row=4)
 
-    def get(self) -> TimeDict:
+    def get(self) -> Optional[TimeDict]:
         """Return the TimeDict that is currently input into this TimeDictEntry."""
-        return TimeDict(
+        result: TimeDict = TimeDict(
             days=0 if not (self._days and self._days.get()) else int(self._days.get()),
             weeks=0 if not (self._weeks and self._weeks.get()) else int(self._weeks.get()),
             hours=0 if not (self._hours and self._hours.get()) else int(self._hours.get()),
             minutes=0 if not (self._minutes and self._minutes.get()) else int(self._minutes.get()),
             seconds=0 if not (self._seconds and self._seconds.get()) else int(self._seconds.get())
         )
+        if result.days != 0 or result.weeks != 0 or result.hours != 0 or result.minutes != 0 or result.seconds != 0:
+            return result
+        return None
     
     def insertDict(self, dict: TimeDict) -> None:
         """Set the input of this TimeDictEntry to the given TimeDict."""

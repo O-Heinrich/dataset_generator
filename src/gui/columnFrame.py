@@ -249,7 +249,8 @@ class ColumnFrame(Frame):
             scd: ColumnDetails = cd.subtypes[self.radioValue.get()]
             result["type"] = scd.type.name
             for p in scd.parameters.values():
-                self._insertDictValue(p.typ, p.name, self.extraParameterEntries[p.name].get(), result)
+                if p.name in self.extraParameterEntries and self.extraParameterEntries[p.name].get():
+                    self._insertDictValue(p.typ, p.name, self.extraParameterEntries[p.name].get(), result)
 
         if len(result) == 1:
             return result["type"]
