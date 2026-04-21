@@ -2,6 +2,7 @@ import re
 from datetime import date, datetime, time, timedelta
 from enums.datatypes import Datatype as Dt
 from deprecated import deprecated
+import random
 from typing import Any, Optional, Union
 
 class Metadata:
@@ -10,6 +11,15 @@ class Metadata:
     def __init__(self, metadata: dict[str, Any]={}):
         """Takes a dictionary and parses it, by extracting applicable values from it"""
         self._nextkey: Optional[int] = metadata.get("nextkey", 0)
+
+        self._nameTitles: dict[str, float] = metadata.get("titles", {})
+        self._minTitles: int = metadata.get("minTitles", 0)
+        self._maxTitles: Union[int, float] = metadata.get("maxTitles", float("inf"))
+        if self._minTitles > self._maxTitles:
+            raise ValueError("maxdiff should not be maxTitles than minTitles")
+        if len(self._nameTitles) < self._minTitles:
+            raise ValueError("not enough titles to fulfill minTitles")
+        self._preserveTitleOrder: bool = metadata.get("preserveOrder", True) # Since python 3.7 order of dictionaries is preserved by default
 
         self._min: Optional[int] = metadata.get("min", 0)
         self._max: Optional[int] = metadata.get("max")
@@ -62,6 +72,31 @@ class Metadata:
         if self._nextkey is None:
             raise KeyError()
         self._nextkey += 1
+
+    def titles(self) -> str:
+        """Returns a title prefix for Datatypes FIRST_NAME, LAST_NAME and FULL_NAME"""
+        if not self._nameTitles:
+            return ""
+        titleList: list[str] = []
+        items: list[tuple[str, float]] = [(k, v) for k, v in self._nameTitles.items()]
+        while True:
+            random.shuffle(items)
+            for title, p in items:
+                if len(titleList) >= self._maxTitles:
+                    break
+                if p >= 1 or random.random() <= p:
+                    titleList.append(title)
+            if len(titleList) >= self._minTitles:
+                break
+        if self._preserveTitleOrder:
+            ordered: list[str] = []
+            for title in self._nameTitles.keys():
+                if title in titleList:
+                    ordered.append(title)
+            titleList = ordered
+        if not titleList:
+            return ""
+        return " ".join(titleList) + " "
 
     def min(self) -> int:
         """Returns the minimum integer value for Datatypes INTEGER, FLOAT and MONEY."""

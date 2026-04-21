@@ -6,12 +6,14 @@
                 "type": "PRIMARY_KEY",
                 "nextkey": 1000
             },
-            "firstName": "FIRST_NAME",
-            "lastName": {
-                "type": "LAST_NAME",
-                "unique": true,
-                "mufm": 5
+            "firstName": {
+                "type": "FIRST_NAME",
+                "titles": {
+                    "Dr.": 0.4,
+                    "Med.": 0.2
+                }
             },
+            "lastName": "LAST_NAME",
             "personName": "FULL_NAME",
             "company": "COMPANY_NAME",
             "address_street": "STREET",
