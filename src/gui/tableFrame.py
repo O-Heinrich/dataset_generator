@@ -24,31 +24,36 @@ class TableFrame(Frame):
         self._columnLambda: Callable[[Dt, ColumnFrame], list[str]] = lambda dt, column: columnLambda(dt, self, column)
         self._cleanupFunc: Callable[[], None] = lambda: cleanupFunc(self)
 
+        innerFrame: Frame = Frame(self)
+        innerFrame.pack(anchor=W)
+
         # Entry for name
-        LabelWithExtras(self, text="Tabellenname:", required=True).grid(column=0, row=0)
+        LabelWithExtras(innerFrame, text="Tabellenname:", required=True).grid(column=0, row=0, sticky=W)
         validateName: str = (self.register(lambda P: str(P).replace("_", "").isalnum() and str(P).isascii()))
-        self.entryName: Entry = Entry(self, validate="all", validatecommand=(validateName, "%P"))
-        self.entryName.grid(column=1, row=0)
+        self.entryName: Entry = Entry(innerFrame, validate="all", validatecommand=(validateName, "%P"))
+        self.entryName.grid(column=1, row=0, sticky=W)
 
         # Entry for amount of datasets to generate
         vcmd: str = (self.register(lambda P: str.isdigit(P) or P == ""))
-        Label(self, text="Anzahl Datensätze:").grid(column=0, row=1)
-        self.entryAmount: Entry = Entry(self, validate="all", validatecommand=(vcmd, "%P"))
-        self.entryAmount.grid(column=1, row=1)
+        Label(innerFrame, text="Anzahl Datensätze:").grid(column=0, row=1, sticky=W)
+        self.entryAmount: Entry = Entry(innerFrame, validate="all", validatecommand=(vcmd, "%P"))
+        self.entryAmount.grid(column=1, row=1, sticky=W)
         self.entryAmount.insert(INSERT, "20")
 
-        # Adding and deleting Columns and ColumnFrames
-        Label(self, text="Tabellenspalten:").grid(column=0, row=2)
-        Button(self, text="Neue Spalte", command=self._newColumn).grid(column=1, row=2)
+        # Adding Columns
+        Button(innerFrame, text="Neue Spalte", command=self._newColumn).grid(column=0, row=3, sticky=W)
         self.columns: list[ColumnFrame] = []
 
         # delete Button
-        Button(self, text="Tabelle löschen", command=self._removeSelf).grid(column=2, row=2)
+        Button(innerFrame, text="Tabelle löschen", command=self._removeSelf).grid(column=1, row=3, sticky=E)
+
+        # Columns
+        Label(self, text="Tabellenspalten:").pack(anchor=W)
 
     def _newColumn(self) -> None:
         """Creates a new ColumnFrame."""
         newColumn = ColumnFrame(self, self._keyColumnLambda, self._columnLambda, self._removeColumn)
-        newColumn.grid(column=1, row=3+len(self.columns))
+        newColumn.pack(anchor=W)
         self.columns.append(newColumn)
 
     def isFilled(self) -> str:

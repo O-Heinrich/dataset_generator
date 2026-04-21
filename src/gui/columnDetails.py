@@ -89,13 +89,13 @@ ALL_TYPES: dict[str, ColumnDetails] = {
         "Startdatum": ParameterDetails("start", typ=It.DATE, default=date.today() - timedelta(days=36525)),
         "Enddatum": ParameterDetails("end", typ=It.DATE, default=date.today())
     }, subtypes={
-        "Früheres Datum": ColumnDetails(Dt.LOWERTHAN_INTEGER, {
+        "Früheres Datum": ColumnDetails(Dt.LOWERTHAN_DATE, {
             OTHERCOLUMN_NAME: ParameterDetails("column", typ=It.TABLE_COLUMN, required=True, description=OTHERCOLUMN_DESC),
             FK_NAME: ParameterDetails("fk", typ=It.TABLE_KEY, description=FK_DESC),
             MIN_DIFF: ParameterDetails("timeDiff", typ=It.DATEDICT, default=TimeDict()),
             MAX_DIFF: ParameterDetails("timeMaxdiff", typ=It.DATEDICT)
         }),
-        "Späteres Datum": ColumnDetails(Dt.HIGHERTHAN_INTEGER, {
+        "Späteres Datum": ColumnDetails(Dt.HIGHERTHAN_DATE, {
             OTHERCOLUMN_NAME: ParameterDetails("column", typ=It.TABLE_COLUMN, required=True, description=OTHERCOLUMN_DESC),
             FK_NAME: ParameterDetails("fk", typ=It.TABLE_KEY, description=FK_DESC),
             MIN_DIFF: ParameterDetails("timeDiff", typ=It.DATEDICT, default=TimeDict()),
@@ -142,5 +142,6 @@ ALL_TYPES: dict[str, ColumnDetails] = {
     }),
     "Werteliste": ColumnDetails(Dt.VALUES, {"Mögliche Werte": ParameterDetails("values", typ=It.LIST_STRING, required=True)}),
     "Regex": ColumnDetails(Dt.FORMAT_STRING, {"Regex": ParameterDetails("regex", required=True, description="Regulärer Ausdruck, welchem\nder generierte String matchen soll")}),
-    "Wort": ColumnDetails(Dt.RANDOM_STRING)
+    "Wort": ColumnDetails(Dt.RANDOM_STRING),
+    "Zähler": ColumnDetails(Dt.COUNTING, {"Startwert": ParameterDetails("nextkey", typ=It.INTEGER, default=0)})
 }

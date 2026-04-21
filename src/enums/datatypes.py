@@ -28,6 +28,7 @@ class Datatype(Enum):
     FORMAT_STRING = 16
     RANDOM_STRING = 17
     PRIMARY_KEY = 20
+    COUNTING = 21
 
     # Types for fields dependend on fields from other tables. Logic accounts for these to have values >= 2000
     FOREIGN_KEY = 2001

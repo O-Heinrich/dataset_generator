@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Frame, Button, Label, Entry, END
 
 class ListEntry(Frame):
     """A Widget, which contains all elements to enter a list of strings in the GUI."""

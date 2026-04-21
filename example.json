@@ -57,7 +57,11 @@
                 "type": "FORMAT_STRING",
                 "regex": "[A-Z]\\-NR\\d{7}"
             },
-            "word": "RANDOM_STRING"
+            "word": "RANDOM_STRING",
+            "counter": {
+                "type": "COUNTING",
+                "nextkey": 1000000
+            }
         },
         "amount": 100
     },

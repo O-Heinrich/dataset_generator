@@ -35,55 +35,53 @@ class App:
         self._frame.bind("<Configure>", self._resetScrollregion)
 
         self._menuFrame: Frame = Frame(self._frame)
-        self._menuFrame.grid(column=1, row=0)
+        self._menuFrame.pack(side=LEFT, anchor=N, padx=20)
 
-        self._tableCount: int = 0
         self._tables: list[TableFrame] = []
 
         # Button for creating new Tables
-        Button(self._menuFrame, text="Neue Tabelle", command=self._createTable).grid(column=1, row=0)
+        Button(self._menuFrame, text="Neue Tabelle", command=self._createTable).grid(column=1, row=0, sticky=W)
 
         # Entries for general Parameters
 
-        LabelWithExtras(self._menuFrame, text="Zielpfad", description="Datei, in welche das Ergebnis\nals SQL-Befehl in Textformat\ngeschrieben wird.\nGeneriert einen zufälligen\nNamen wenn nicht angegeben.").grid(column=1, row=1)
+        LabelWithExtras(self._menuFrame, text="Zielpfad", description="Datei, in welche das Ergebnis\nals SQL-Befehl in Textformat\ngeschrieben wird.\nGeneriert einen zufälligen\nNamen wenn nicht angegeben.").grid(column=1, row=1, sticky=W)
         self._targetPath: Entry = Entry(self._menuFrame)
-        self._targetPath.grid(column=2, row=1)
+        self._targetPath.grid(column=2, row=1, sticky=E)
 
-        Label(self._menuFrame, text="Filemodus").grid(column=1, row=2)
+        Label(self._menuFrame, text="Filemodus").grid(column=1, row=2, sticky=W)
         self._filemode: StringVar = StringVar(self._menuFrame)
         self._filemode.set("Erstellen")
-        OptionMenu(self._menuFrame, self._filemode, "Erstellen", "Anhängen", "Überschreiben").grid(column=2, row=2)
+        OptionMenu(self._menuFrame, self._filemode, "Erstellen", "Anhängen", "Überschreiben").grid(column=2, row=2, sticky=E)
 
         self._noNewLine: BooleanVar = BooleanVar(self._menuFrame)
-        cb:Checkbutton = Checkbutton(self._menuFrame, text="Keine neuen Zeilen", variable=self._noNewLine)
-        cb.grid(column=1, row=3)
+        cb: Checkbutton = Checkbutton(self._menuFrame, text="Keine neuen Zeilen", variable=self._noNewLine)
+        cb.grid(column=1, row=3, sticky=W)
         ToolTip(cb, msg="Wenn aktiviert, wird der\ngesamte SQL-Befehl in eine Zeile geschrieben")
 
-        LabelWithExtras(self._menuFrame, text="Localization", description="EXPERIMENTAL FEATURE\nKann für Addressen zu Fehlern führen.").grid(column=1, row=4)
+        LabelWithExtras(self._menuFrame, text="Localization", description="EXPERIMENTAL FEATURE\nKann für Addressen zu Fehlern führen.").grid(column=1, row=4, sticky=W)
         self._localization: Entry = Entry(self._menuFrame)
-        self._localization.grid(column=2, row=4)
+        self._localization.grid(column=2, row=4, sticky=E)
         self._localization.insert(INSERT, "de_DE")
 
-        LabelWithExtras(self._menuFrame, text="Encoding", description="Zeichencodierung für die zu erstellende Datei").grid(column=1, row=5)
+        LabelWithExtras(self._menuFrame, text="Encoding", description="Zeichencodierung für die zu erstellende Datei").grid(column=1, row=5, sticky=W)
         self._encoding: Entry = Entry(self._menuFrame)
-        self._encoding.grid(column=2, row=5)
+        self._encoding.grid(column=2, row=5, sticky=E)
         self._encoding.insert(INSERT, "utf-8")
 
-        Label(self._menuFrame, text="SQL-Dialekt").grid(column=1, row=6)
+        Label(self._menuFrame, text="SQL-Dialekt").grid(column=1, row=6, sticky=W)
         self._dialect: StringVar = StringVar(self._menuFrame)
         self._dialect.set(SqlDialect.DEFAULT.name)
-        OptionMenu(self._menuFrame, self._dialect, *([d.name for d in SqlDialect])).grid(column=2, row=6)
+        OptionMenu(self._menuFrame, self._dialect, *([d.name for d in SqlDialect])).grid(column=2, row=6, sticky=E)
 
         # generate Button
-        Button(self._menuFrame, text="Generate", command=self.execute).grid(column=1, row=7)
+        Button(self._menuFrame, text="Generate", command=self.execute).grid(column=1, row=7, sticky=W)
         self._generateTextLabel: Optional[Label] = None
 
     def _createTable(self) -> None:
         """Creates a new TableFrame."""
         newTable: TableFrame = TableFrame(self._frame, self._getKeyColumns, self._getTypeColumns, self._removeTable)
-        newTable.grid(column=2 + self._tableCount, row=0)
+        newTable.pack(side=LEFT, anchor=N, padx=20)
         self._tables.append(newTable)
-        self._tableCount += 1
 
     def _getKeyColumns(self, perspective_table: TableFrame, perspective_column: ColumnFrame) -> list[str]:
         """Return a list of names of Columns with a key type."""
@@ -118,7 +116,7 @@ class App:
         Returns an empty string when all required Entries that are part of the GUI have a valid input, making all inputs valid to be sent to the backend.
         If something is missing or invalid, an error message is returned instead.
         """
-        if self._tableCount == 0:
+        if len(self._tables) == 0:
             return "Keine Tabellen vorhanden"
         for t in self._tables:
             f: str = t.isFilled()
@@ -179,7 +177,7 @@ class App:
         if self._generateTextLabel is not None:
             self._generateTextLabel.destroy()
         self._generateTextLabel = Label(self._menuFrame, text=text)
-        self._generateTextLabel.grid(column=1, row=8)
+        self._generateTextLabel.grid(column=1, row=8, columnspan=2)
 
     def _resetScrollregion(self, event: Any=None):
         self._canvas.configure(scrollregion=self._canvas.bbox("all"))

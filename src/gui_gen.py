@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Tk
 from gui.app import App
 from typeCheck import typeCheck
 import argparse
@@ -15,6 +15,7 @@ if not noTypeCheck:
 
 # create top level tkinter widget and initialize App
 root = Tk()
+root.title("dataset_generator")
 if platform.system() == "Windows":
     root.state("zoomed")
 app = App(root)

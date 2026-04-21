@@ -30,24 +30,24 @@ class ColumnFrame(Frame):
         self._columnLambda: Callable[[Dt], list[str]] = lambda dt: columnLambda(dt, self)
         self._cleanupFunc: Callable[[], None] = lambda: cleanupFunc(self)
         # validators
-        self._validateInt: str = (self.register(lambda P: str.isdigit(P) or P == ""))
+        self._validateInt: str = (self.register(lambda P: P == "" or (all(char in "0123456789" for char in P[1:]) and P[0] in "0123456789-")))
         self._validateFloat: str = (self.register(lambda P: P == "" or (all(char in "0123456789." for char in P[1:]) and P[0] in "0123456789.-" and P.count(".") <= 1)))
 
         # delete Button
-        Button(self, text="Spalte löschen", command=self._removeSelf).grid(column=0, row=0)
+        Button(self, text="Spalte löschen", command=self._removeSelf).pack(side=LEFT, padx=5)
 
         # Entry for name
-        LabelWithExtras(self, text="Spaltenname:", required=True).grid(column=1, row=0)
+        LabelWithExtras(self, text="Spaltenname:", required=True).pack(side=LEFT, padx=5)
         validateName: str = (self.register(lambda P: str(P).replace("_", "").isalnum() and str(P).isascii()))
         self.entryName: Entry = Entry(self, validate="all", validatecommand=(validateName, "%P"))
-        self.entryName.grid(column=2, row=0)
+        self.entryName.pack(side=LEFT, padx=5)
 
         # Entry for Datatype
         typeOptions: list[str] = list(ALL_TYPES.keys())
         self.entryType: StringVar = StringVar(self)
         self.entryType.set("")
-        LabelWithExtras(self, text="Spaltentyp:", required=True).grid(column=3, row=0)
-        OptionMenu(self, self.entryType, *typeOptions, command=self._onTypeChoice).grid(column=4, row=0)
+        LabelWithExtras(self, text="Spaltentyp:", required=True).pack(side=LEFT, padx=5)
+        OptionMenu(self, self.entryType, *typeOptions, command=self._onTypeChoice).pack(side=LEFT, padx=5)
         self.lastTyp: Optional[str] = None
 
         # Parameters
@@ -85,27 +85,29 @@ class ColumnFrame(Frame):
         # create Entries for Parameters
         columnCount: int = 1
         for p in self.cd.parameters:
-            pn: Optional[ParameterDetails] = self.cd.parameters.get(p)
-            assert pn
-            par: ParameterDetails = pn
+            opar: Optional[ParameterDetails] = self.cd.parameters.get(p)
+            assert opar
+            par: ParameterDetails = opar
+
             label: LabelWithExtras = LabelWithExtras(self.windowFrame, p, required=par.required, description=par.description)
-            label.grid(column=columnCount, row=0)
+            label.grid(column=columnCount, row=1)
             self.parameterLabels.append(label)
 
-            self._createEntry(par, columnCount, self.parameterEntries)
+            self._createEntry(par, columnCount, 2, self.parameterEntries)
             columnCount += 1
+
         # create Radiobuttons for subtypes
         if self.cd.subtypes:
-            rowCount: int = 1
+            rdFrame: Frame = Frame(self.windowFrame)
+            rdFrame.grid(column=0, row=3)
             self.radioValue = StringVar(value="NORMAL")
-            rd: Radiobutton = Radiobutton(self.windowFrame, text="Normal", variable=self.radioValue, value="NORMAL", command=lambda: clearWidgets([self.extraParameterLabels, self.extraParameterEntries]))
+            rd: Radiobutton = Radiobutton(rdFrame, text="Normal", variable=self.radioValue, value="NORMAL", command=lambda: clearWidgets([self.extraParameterLabels, self.extraParameterEntries]))
             self.radiobuttons.append(rd)
-            rd.grid(column=0, row=rowCount)
+            rd.pack(anchor=W)
             for st in self.cd.subtypes:
-                rowCount += 1
-                rdb: Radiobutton = Radiobutton(self.windowFrame, text=st, variable=self.radioValue, value=st, command=self._createSubEntries)
+                rdb: Radiobutton = Radiobutton(rdFrame, text=st, variable=self.radioValue, value=st, command=self._createSubEntries)
                 self.radiobuttons.append(rdb)
-                rdb.grid(column=0, row=rowCount)
+                rdb.pack(anchor=W)
 
         # Button for Popup Window
         if self.popupButton:
@@ -113,9 +115,9 @@ class ColumnFrame(Frame):
             self.popupButton = None
         if len(self.parameterLabels) + len(self.radiobuttons) + len(self.extraParameterLabels) > 0:
             self.popupButton = Button(self, text="Optionen", command=self._popupParameters)
-            self.popupButton.grid(column=5, row=0)
+            self.popupButton.pack(side=LEFT, padx=5)
             self.windowFrame.grid(column=0, row=0)
-            Button(self.windowFrame, text="Schließen", command=self.window.withdraw).grid(column=0, row=0)
+            Button(self.windowFrame, text="Schließen", command=self.window.withdraw).grid(column=0, row=0, sticky=W)
             self.window.protocol("WM_DELETE_WINDOW", self.window.withdraw)
             self.window.withdraw()
         else:
@@ -123,7 +125,7 @@ class ColumnFrame(Frame):
             self.window = None
             self.windowFrame = None
 
-    def _createEntry(self, p: ParameterDetails, column: int, entrydict: dict[str, Union[Entry, ColumnEntry, ListEntry, TimeDictEntry, DatetimeEntry]]) -> None:
+    def _createEntry(self, p: ParameterDetails, column: int, row: int, entrydict: dict[str, Union[Entry, ColumnEntry, ListEntry, TimeDictEntry, DatetimeEntry]]) -> None:
         """
         Creates an Entry Widget to enter a Parameter with the given Parameterdetails.
         Adds the new Entry to this Frames Popup Window and to the given entrydict.
@@ -156,7 +158,7 @@ class ColumnFrame(Frame):
             entry = DatetimeEntry(self.windowFrame, time=True)
         else:
             raise NotImplementedError()
-        entry.grid(column=column, row=1)
+        entry.grid(column=column, row=row, padx=10, pady=10)
         if p.default:
             if p.typ in [It.STRING, It.INTEGER, It.FLOAT]:
                 assert isinstance(entry, Entry)
@@ -177,7 +179,7 @@ class ColumnFrame(Frame):
         # cleanup
         clearWidgets([self.extraParameterLabels, self.extraParameterEntries])
 
-        columnCount: int = 1 + len(self.parameterEntries)
+        columnCount: int = 1
         assert self.cd and self.radioValue
         ocd: Optional[ColumnDetails] = self.cd.subtypes.get(self.radioValue.get())
         assert ocd
@@ -187,10 +189,12 @@ class ColumnFrame(Frame):
             opar: Optional[ParameterDetails] = cd.parameters.get(p)
             assert opar
             par: ParameterDetails = opar
+
             label: LabelWithExtras = LabelWithExtras(self.windowFrame, p, required=par.required, description=par.description)
-            label.grid(column=columnCount, row=0)
+            label.grid(column=columnCount, row=3)
             self.extraParameterLabels.append(label)
-            self._createEntry(par, columnCount, self.extraParameterEntries)
+
+            self._createEntry(par, columnCount, 4, self.extraParameterEntries)
             columnCount += 1
 
     def isFilled(self) -> str:
@@ -258,6 +262,9 @@ class ColumnFrame(Frame):
             pass
         elif pt in [It.STRING, It.TABLE_KEY, It.TABLE_COLUMN, It.DATE, It.TIME]:
             dict[name] = str(v)
+        elif v == "":
+            # Empty inputs are ignored
+            pass
         elif pt == It.INTEGER:
             dict[name] = int(v)
         elif pt == It.FLOAT:

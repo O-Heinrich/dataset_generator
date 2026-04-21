@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Frame, Entry, Label, INSERT
 from gui.timeDict import TimeDict
 from typing import Optional
 

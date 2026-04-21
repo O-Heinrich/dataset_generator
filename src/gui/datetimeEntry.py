@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Frame
 from tkcalendar import Calendar
 from tktimepicker import AnalogPicker, constants
 from typing import Optional, Any, Union

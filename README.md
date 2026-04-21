@@ -94,6 +94,7 @@ Folgende Optionen können an den Befehl angehangen werden:
 | -n | Anzahl der zu generierenden Datensätze. Wenn in config json Datei angegeben, wird dieser Wert überschrieben | 20 |
 | -e | Zeichencodierung für die zu erstellende Datei | utf-8 |
 | -d | Spezieller SQL-Dialekt - Unterstützte Werte: PostgreSQL (p) - case insensitive, Abkürzung in Klammern | |
+| --oneline | Keine Zeilenumbrüche innerhalb eines INSERT statements | False |
 | -l | Location wie in [https://faker.readthedocs.io/en/master/#localization](https://faker.readthedocs.io/en/master/#localization). | de_DE |
 > **-l Kann für Addressen zu Fehlern führen.**
 
@@ -198,6 +199,7 @@ Folgende Typen werden unterstützt:
 | VALUES | Zufälliger Wert aus einer Auswahl an Werten | values | | required - Array an möglichen Werten, darf nicht leer sein. Wiederholte Werte erhöht die Wahrscheinlichkeit entsprechend |
 | FORMAT_STRING | String, der dem angegebenen regex matched | regex | | required - regex, dem der zufällige String matchen soll |
 | RANDOM_STRING | Zufälliges englisches Wort | | | |
+| COUNTING | Integer, welcher bei jedem Datensatz hochgezählt wird | nextkey | 0 | Erster Wert |
 
 Für logisch innerhalb einres Datensatzes voneinander abhängige Spalten können die folgenden Typen verwendet werden.
 Diese benötigen immer den Parameter "column", welcher der Name der Spalte ist, von dem der Wert abhängen soll:
@@ -307,9 +309,9 @@ Details siehe die jeweiligen Klassen/Dateien.
 
 ### gui
 
-Die GUI ist mit tkinter gebaut und benutzt zum größten Teil den grid Geometry Manager. Die Ausnahme sind die
-Scrollbars. Auf der obersten Ebene ist App, welche zudem in gui_gen.py verwendet wird. Darin verschachtelt sind die
-Frames TableFrame und ColumnFrame, welche je Tabellen und ihre Spalten darstellen. In columnDetails.py sind alle
-verfügbaren Datentypen und ihre Parameter hinterlegt. Zudem stehen mit ColumnEntry, DatetimeEntry, LabelWithExtras,
-ListEntry und TimeDictEntry custom Widgets bereit. Für Details siehe die jeweiligen Klassen/Dateien.
+Die GUI ist mit tkinter gebaut und benutzt als Geometry Manager teilweise grid und teilweise pack. Auf der obersten
+Ebene ist App, welche zudem in gui_gen.py verwendet wird. Darin verschachtelt sind die Frames TableFrame und
+ColumnFrame, welche je Tabellen und ihre Spalten darstellen. In columnDetails.py sind alle verfügbaren Datentypen und
+ihre Parameter hinterlegt. Zudem stehen mit ColumnEntry, DatetimeEntry, LabelWithExtras, ListEntry und TimeDictEntry
+custom Widgets bereit. Für Details siehe die jeweiligen Klassen/Dateien.
 

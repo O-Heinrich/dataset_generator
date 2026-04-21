@@ -86,7 +86,7 @@ class Column:
             if self.randomword is None:
                 raise TypeError()
             return self.randomword.word()
-        elif self.type == Dt.PRIMARY_KEY:
+        elif self.type == Dt.PRIMARY_KEY or self.type == Dt.COUNTING:
             key: int = self.metadata.nextkey()
             self.metadata.incrementKey()
             return key

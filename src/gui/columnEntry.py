@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Frame, Entry, OptionMenu, StringVar
 from typing import Callable, Union, Optional
 
 class ColumnEntry(Frame):

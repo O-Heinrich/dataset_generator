@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Frame, Label
 from tktooltip import ToolTip
 
 class LabelWithExtras(Frame):
