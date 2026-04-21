@@ -13,13 +13,18 @@ class TableModel:
         self.columns: dict[str, Column] = columns
         self.tablename: str = tablename
         self.amount: int = amount
-        self.primary: Optional[str] = None
+        self.primary: Optional[Column] = None
         self.foreign: list[str] = []
+        requiresPrimary: bool = False
         for name, c in self.columns.items():
             if c.type == Dt.PRIMARY_KEY:
-                self.primary = name
+                self.primary = c
             elif c.type == Dt.FOREIGN_KEY:
                 self.foreign.append(name)
+            if c.type.value >= 2000 and c.metadata.foreignColumn().find(".") == -1:
+                requiresPrimary = True
+        if requiresPrimary and not self.primary:
+            self.primary = Column("hidden_primary", Dt.PRIMARY_KEY, hidden=True)
         self.noNewlines: bool = noNewlines
         self.dialect: SD = dialect
 
@@ -28,8 +33,10 @@ class TableModel:
         generatedValues: list[list[Any]] = []
         for _ in range(self.amount):
             key: Optional[int] = None
-            if self.primary is not None:
-                key = self.columns[self.primary].predictKey()
             fKeys: dict[str, int] = {}
+            if self.primary is not None:
+                key = self.primary.predictKey()
+                if self.primary.hidden:
+                    self.primary.getValue(self.fake, key, fKeys)
             generatedValues.append([c.getValue(self.fake, key, fKeys) for c in self.columns.values()])
         return createInsertQuery(self.tablename, self.columns.keys(), generatedValues, self.dialect, noNewLine=self.noNewlines)

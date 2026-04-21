@@ -14,7 +14,7 @@ from typing import Any, Optional, Union
 class Column:
     """Represents one column in a TableModel and consists of a name, a Datatype and Metadata."""
 
-    def __init__(self, name: str, type: Dt, metadata: dict[str, Any]={}):
+    def __init__(self, name: str, type: Dt, metadata: dict[str, Any]={}, hidden=False):
         self.name: str = name
         self.type: Dt = type
         self.metadata: Metadata = Metadata(metadata)
@@ -24,6 +24,7 @@ class Column:
         self.listeners: list[ColumnListener] = []
         self.listener: Optional[ColumnListener] = None
         self.ownTable: bool = False
+        self.hidden: bool = hidden
         
     def getValue(self, fake: Faker, id: Optional[int]=None, fKeys: dict[str, int]={}) -> Any:
         """
