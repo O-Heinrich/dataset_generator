@@ -41,11 +41,7 @@ def createTables(
         ) -> dict[str, TableModel]:
     """Creates and returns TableModels according to the given json."""
     tables: dict[str, TableModel] = {}
-    data: list[dict[str, Any]]
-    if not isinstance(json, list):
-        data = [json]
-    else:
-        data = json
+    data: list[dict[str, Any]] = sortTables(json)
     # Iterate over each table given by the data to create the TableModels
     for table in data:
         tablename: str = table["table"]
@@ -110,3 +106,52 @@ def generateAndWriteQueries(
     else:
         print("Successfully wrote query into", targetPath)
     return targetPath
+
+
+def sortTables(tables: Union[list[dict[str, Any]], dict[str, Any]]) -> list[dict[str, Any]]:
+    """Sorts a list of dictionaries representing tables such that all foreign keys are usable before transforming them to TableModels"""
+    if isinstance(tables, dict):
+        return [tables]
+    namesToReferences: dict[str, set[str]] = {}
+    for table in tables:
+        tName = table.get("table")
+        assert tName and isinstance(tName, str)
+        namesToReferences[tName] = set()
+    for table in tables:
+        tName = table.get("table")
+        assert tName and isinstance(tName, str)
+        references: set[str] = namesToReferences[tName]
+        cc = table.get("columns")
+        assert cc and isinstance(cc, dict)
+        columns: dict[str, Any] = cc
+        for val in columns.values():
+            if isinstance(val, dict):
+                fc = val.get("column")
+                if fc and isinstance(fc, str) and fc.find(".") > 0:
+                    references.add(fc.split(".")[0])
+
+    sortedNames: list[str] = []
+    while len(sortedNames) < len(tables):
+        removed: list[str] = []
+
+        for name, references in namesToReferences.items():
+            if len(references) == 0:
+                removed.append(name)
+                sortedNames.append(name)
+        for name in removed:
+            del namesToReferences[name]
+
+        for references in namesToReferences.values():
+            for name in removed:
+                references.discard(name)
+
+        if len(removed) == 0:
+            raise ValueError("Cannot sort tables")
+        
+    sortedTables: list[dict[str, Any]] = []
+    for name in sortedNames:
+        for table in tables:
+            if table.get("table") == name:
+                sortedTables.append(table)
+                break
+    return sortedTables
