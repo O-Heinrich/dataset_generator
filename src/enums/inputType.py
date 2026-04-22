@@ -17,3 +17,4 @@ class InputType(Enum):
     DATEDICT = auto()
     DATETIMEDICT = auto()
     LIST_STRING = auto()
+    FILE_PATH = auto()

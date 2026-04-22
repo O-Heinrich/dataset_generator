@@ -140,7 +140,13 @@ ALL_TYPES: dict[str, ColumnDetails] = {
             MAX_DIFF: ParameterDetails("timeMaxdiff", typ=It.DATETIMEDICT)
         })
     }),
-    "Werteliste": ColumnDetails(Dt.VALUES, {"Mögliche Werte": ParameterDetails("values", typ=It.LIST_STRING, required=True)}),
+    "Werteliste": ColumnDetails(Dt.VALUES, {
+        "Mögliche Werte": ParameterDetails("values", typ=It.LIST_STRING),
+        "Dateien": ParameterDetails("import", typ=It.FILE_PATH)
+        }, subtypes={
+            "Zyklische Werte": ColumnDetails(Dt.CYCLING_VALUES),
+            "Nicht wiederholende Werte": ColumnDetails(Dt.SHUFFLED_VALUES)
+        }),
     "Regex": ColumnDetails(Dt.FORMAT_STRING, {"Regex": ParameterDetails("regex", required=True, description="Regulärer Ausdruck, welchem\nder generierte String matchen soll")}),
     "Wort": ColumnDetails(Dt.RANDOM_STRING),
     "Zähler": ColumnDetails(Dt.COUNTING, {"Startwert": ParameterDetails("nextkey", typ=It.INTEGER, default=0)})

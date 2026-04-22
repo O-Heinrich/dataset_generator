@@ -1,7 +1,8 @@
 from tkinter import Frame, Entry, OptionMenu, StringVar
 from typing import Callable, Union, Optional
+from gui.entryInterface import EntryInterface
 
-class ColumnEntry(Frame):
+class ColumnEntry(Frame, EntryInterface):
     """A Widget, which contains all elements to pick an existing Column in the GUI."""
 
     def __init__(self, root: Frame, columnLambda: Callable[[], list[str]]) -> None:

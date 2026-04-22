@@ -74,10 +74,11 @@ class Column:
         elif self.type == Dt.DATE_TIME:
             return numg.generateDateTime(fake, start=self.metadata.start(), end=self.metadata.end(), startTime=self.metadata.startTime(), endTime=self.metadata.endTime(), timeRounding=self.metadata.timeRounding())
         elif self.type == Dt.VALUES:
-            values = self.metadata.values()
-            if values is None or not isinstance(values, list) or len(values) < 1:
-                raise ValueError("For Values Type there must be metadata for the values")
-            return random.choice(values)
+            return self.metadata.randomValue()
+        elif self.type == Dt.CYCLING_VALUES:
+            return self.metadata.nextValue()
+        elif self.type == Dt.SHUFFLED_VALUES:
+            return self.metadata.randomValue(dontRepeat=True)
         elif self.type == Dt.FORMAT_STRING:
             reg: Optional[str] = self.metadata.regex()
             if reg is None:

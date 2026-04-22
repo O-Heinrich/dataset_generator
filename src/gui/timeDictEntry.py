@@ -1,8 +1,9 @@
 from tkinter import Frame, Entry, Label, INSERT
 from gui.timeDict import TimeDict
 from typing import Optional
+from gui.entryInterface import EntryInterface
 
-class TimeDictEntry(Frame):
+class TimeDictEntry(Frame, EntryInterface):
     """A Widget, which contains all elements to enter a TimeDict in the GUI."""
 
     def __init__(self, root: Frame, doDate: bool=True, doTime: bool=True) -> None:

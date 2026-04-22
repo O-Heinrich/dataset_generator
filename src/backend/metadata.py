@@ -10,7 +10,7 @@ class Metadata:
 
     def __init__(self, metadata: dict[str, Any]={}):
         """Takes a dictionary and parses it, by extracting applicable values from it"""
-        self._nextkey: Optional[int] = metadata.get("nextkey", 0)
+        self._next: int = metadata.get("nextkey", 0)
 
         self._nameTitles: dict[str, float] = metadata.get("titles", {})
         self._minTitles: int = metadata.get("minTitles", 0)
@@ -37,6 +37,28 @@ class Metadata:
         self._timeRounding: int = metadata.get("timeRounding", 0)
 
         self._values: Optional[list[Any]] = metadata.get("values")
+        self._usedValues: list[Any] = []
+        filePaths: Optional[Union[str, list[str], dict[str, str]]] = metadata.get("import")
+        if filePaths:
+            sep: str = metadata.get("sep", "\n")
+            if self._values is None:
+                self._values = []
+            content: str
+            
+            if isinstance(filePaths, dict):
+                for filePath, thisSep in filePaths.items():
+                    with open(filePath, 'r') as file:
+                        content = file.read()
+                        self._values.extend(content.split(thisSep or sep))
+            elif isinstance(filePaths, list):
+                for filePath in filePaths:
+                    with open(filePath, 'r') as file:
+                        content = file.read()
+                        self._values.extend(content.split(sep))
+            elif isinstance(filePaths, str):
+                with open(filePaths, 'r') as file:
+                    content = file.read()
+                    self._values.extend(content.split(sep))
 
         self._regex: Optional[str] = metadata.get("regex")
 
@@ -60,18 +82,14 @@ class Metadata:
 
     def nextkey(self) -> int:
         """
-        Returns the next unique integer key value for Datatype PRIMARY_KEY.
+        Returns the next unique integer value for Datatype PRIMARY_KEY, COUNTING and CYCLING_VALUES.
         Does not increment the key value, for that use incrementKey()
         """
-        if self._nextkey is None:
-            raise KeyError()
-        return self._nextkey
+        return self._next
     
     def incrementKey(self) -> None:
-        """Increments the next unique integer key value."""
-        if self._nextkey is None:
-            raise KeyError()
-        self._nextkey += 1
+        """Increments the next (unique) integer key value."""
+        self._next += 1
 
     def titles(self) -> str:
         """Returns a title prefix for Datatypes FIRST_NAME, LAST_NAME and FULL_NAME"""
@@ -136,12 +154,40 @@ class Metadata:
         """Returns the number of minutes to be rounded to for values of Datatypes TIME and DATE_TIME"""
         return self._timeRounding
 
+    @deprecated
     def values(self) -> list[Any]:
         """Returns the list of possible values for values of Datatype VALUES."""
         if self._values is None:
             raise KeyError()
         return self._values
     
+    def nextValue(self) -> Any:
+        """Returns the next value of the list of possible values, cycling through the list"""
+        if self._values is None:
+            raise KeyError()
+        v: Any = self._values[self.nextkey() % len(self._values)]
+        self.incrementKey()
+        return v
+
+    def randomValue(self, dontRepeat=False) -> Any:
+        """
+        Returns a random value of the list of possible values for Datatype VALUES and SHUFFLED_VALUES.
+        When dontRepeat is True it will store the already used value and don't repeat it until every value was used.
+        """
+        if self._values is None or len(self._values) == 0:
+            raise KeyError()
+        if dontRepeat:
+            if len(self._usedValues) == 0:
+                random.shuffle(self._values)
+            v: Any = self._values.pop()
+            self._usedValues.append(v)
+            if len(self._values) == 0:
+                self._values = self._usedValues
+                self._usedValues = []
+            return v
+        else:
+            return random.choice(self._values)
+
     def regex(self) -> str:
         """Returns the string representing the regex for values of Datatype REGEX."""
         if self._regex is None:

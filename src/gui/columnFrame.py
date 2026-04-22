@@ -6,8 +6,10 @@ from gui.timeDictEntry import TimeDictEntry
 from gui.columnEntry import ColumnEntry
 from gui.labelWithExtras import LabelWithExtras
 from gui.datetimeEntry import DatetimeEntry
+from gui.filepathEntry import FilepathEntry
 from enums.inputType import InputType as It
 from enums.datatypes import Datatype as Dt
+from gui.entryInterface import EntryInterface
 
 class ColumnFrame(Frame):
     """
@@ -53,12 +55,12 @@ class ColumnFrame(Frame):
         # Parameters
         self.cd: Optional[ColumnDetails] = None
         self.parameterLabels: list[LabelWithExtras] = []
-        self.parameterEntries: dict[str, Union[Entry, ColumnEntry, ListEntry, TimeDictEntry, DatetimeEntry]] = {}
+        self.parameterEntries: dict[str, Union[Entry, EntryInterface]] = {}
         # Radiobuttons for subtypes
         self.radiobuttons: list[Radiobutton] = []
         self.radioValue: Optional[StringVar] = None
         self.extraParameterLabels: list[LabelWithExtras] = []
-        self.extraParameterEntries: dict[str, Union[Entry, ColumnEntry, ListEntry, TimeDictEntry, DatetimeEntry]] = {}
+        self.extraParameterEntries: dict[str, Union[Entry, EntryInterface]] = {}
         # Popup Window
         self.popupButton: Optional[Button] = None
         self.window: Optional[Toplevel] = None
@@ -125,13 +127,13 @@ class ColumnFrame(Frame):
             self.window = None
             self.windowFrame = None
 
-    def _createEntry(self, p: ParameterDetails, column: int, row: int, entrydict: dict[str, Union[Entry, ColumnEntry, ListEntry, TimeDictEntry, DatetimeEntry]]) -> None:
+    def _createEntry(self, p: ParameterDetails, column: int, row: int, entrydict: dict[str, Union[Entry, EntryInterface]]) -> None:
         """
         Creates an Entry Widget to enter a Parameter with the given Parameterdetails.
         Adds the new Entry to this Frames Popup Window and to the given entrydict.
         """
         assert self.window and self.windowFrame
-        entry: Union[Entry, ColumnEntry, ListEntry, TimeDictEntry, DatetimeEntry]
+        entry: Union[Entry, EntryInterface]
         if p.typ == It.STRING:
             entry = Entry(self.windowFrame)
         elif p.typ == It.INTEGER:
@@ -156,6 +158,8 @@ class ColumnFrame(Frame):
             entry = DatetimeEntry(self.windowFrame, date=True)
         elif p.typ == It.TIME:
             entry = DatetimeEntry(self.windowFrame, time=True)
+        elif p.typ == It.FILE_PATH:
+            entry = FilepathEntry(self.windowFrame, self.window)
         else:
             raise NotImplementedError()
         entry.grid(column=column, row=row, padx=10, pady=10)
@@ -272,7 +276,7 @@ class ColumnFrame(Frame):
             dict[name] = float(v)
         elif pt in [It.TIMEDICT, It.DATEDICT, It.DATETIMEDICT]:
             dict[name] = v.toDict()
-        elif pt == It.LIST_STRING:
+        elif pt in [It.LIST_STRING, It.FILE_PATH]:
             dict[name] = v
         else:
             raise NotImplementedError()

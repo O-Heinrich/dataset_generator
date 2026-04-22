@@ -3,8 +3,9 @@ from tkcalendar import Calendar
 from tktimepicker import AnalogPicker, constants
 from typing import Optional, Any, Union
 from datetime import date, time
+from gui.entryInterface import EntryInterface
 
-class DatetimeEntry(Frame):
+class DatetimeEntry(Frame, EntryInterface):
     """A Widget, which contains all elements to enter a datetime, date or time in the GUI."""
 
     def __init__(self, root: Frame, date: bool=False, time: bool=False) -> None:
