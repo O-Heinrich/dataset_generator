@@ -96,6 +96,9 @@ def generateAndWriteQueries(
                 query: str = newTable.generate()
                 file.write(query)
                 file.write("\n\n")
+    except FileExistsError:
+        print(f'File {targetPath} already exists')
+        return None
     except Exception as e:
         print(e)
         print(traceback.format_exc())
