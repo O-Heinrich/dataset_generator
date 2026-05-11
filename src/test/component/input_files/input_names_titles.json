@@ -1,0 +1,28 @@
+{
+    "table": "table_name",
+    "columns": {
+        "id": "PRIMARY_KEY",
+        "first_name": {
+            "type": "FIRST_NAME",
+            "titles": {
+                "Dr.": 0.8,
+                "Dr. Med.": 0.1
+            },
+            "maxTitles": 1
+        },
+        "last_name": {
+            "type": "LAST_NAME",
+            "titles": {"A": 0.1,"B": 0.1,"C": 0.1,"D": 0.1},
+            "minTitles": 1,
+            "preserveOrder": true
+        },
+        "full_name": {
+            "type": "FULL_NAME",
+            "titles": {"A": 0.2,"B": 0.3,"C": 0.1,"D": 0.1,"E":0.05,"F":0.2,"G":0.5,"H":0.1,"I":0.15},
+            "minTitles": 3,
+            "maxTitles": 5,
+            "preserveOrder": false
+        }
+    },
+    "amount": 100
+}

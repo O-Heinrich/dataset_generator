@@ -1,0 +1,31 @@
+[
+    {
+        "table": "test1",
+        "columns": {
+            "id": "PRIMARY_KEY",
+            "int": {
+                "type": "INTEGER",
+                "max": 100
+            },
+            "lowerint": {
+                "type": "LOWERTHAN_INTEGER",
+                "column": "int",
+                "max": 100
+            }
+        }
+    },
+    {
+        "table": "test2",
+        "columns": {
+            "int": {
+                "type": "INTEGER",
+                "max": 100
+            },
+            "higherint": {
+                "type": "HIGHERTHAN_INTEGER",
+                "column": "int",
+                "max": 100
+            }
+        }
+    }
+]

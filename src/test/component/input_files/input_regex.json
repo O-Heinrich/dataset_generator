@@ -1,0 +1,11 @@
+{
+    "table": "table_name",
+    "columns": {
+        "id": "PRIMARY_KEY",
+        "reg1": {
+            "type": "FORMAT_STRING",
+            "regex": "AB\\d[C-Z]\\d+"
+        }
+    },
+    "amount": 50
+}

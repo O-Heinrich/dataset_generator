@@ -1,0 +1,9 @@
+{
+    "table": "tablename",
+    "columns": {
+        "id": "PRIMARY_KEY",
+        "date": "DATE",
+        "datetime": "DATE_TIME"
+    },
+    "amount": 100
+}

@@ -1,0 +1,27 @@
+CREATE TABLE myCoolTable (unique_id, name, address, plz, town, Float, Int, Date, Time, DateTime, values, regex);
+
+-- The following Queries have been generated automatically using a script and appended to this file
+
+
+INSERT INTO myCoolTable (unique_id, name, address, plz, town, Float, Int, Date, Time, DateTime, values, regex) VALUES
+(0, "Aleksandr Weihmann", "Fredo-Walter-Gasse 79", "54235", "Roding", 18.24, 3, "2003-04-09", "02:31:56", "2000-10-11 08:17:51", "C", "rp32Vg"),
+(1, "Annelore Heintze", "Metzweg 62/45", "39537", "Calau", 89.35, 11, "2002-08-07", "22:50:40", "2002-09-21 15:22:13", "C", "Bc01no"),
+(2, "Hans-Josef Kranz", "Hanne-Ullmann-Gasse 6/2", "70154", "Warendorf", 82.79, 77, "2005-04-20", "14:31:36", "2006-05-09 15:57:02", "A", "Jm86oC"),
+(3, "Bertha Hentschel B.A.", "Dagmar-Röhrdanz-Platz 4010", "16566", "Moers", 96.54, 35, "2004-04-01", "02:44:40", "2007-07-16 20:02:12", "A", "WZ26vr"),
+(4, "Andrei Siering", "Guido-Ladeck-Straße 13-36", "09788", "Griesbach Rottal", 25.47, 27, "2003-06-23", "11:26:20", "2004-01-23 09:40:14", "B", "gf61w2"),
+(5, "Birte Steckel-Seidel", "Weitzelgasse 7", "12411", "Holzminden", 56.35, 77, "2002-03-23", "23:11:47", "2004-06-15 05:52:58", "B", "Zc78h_"),
+(6, "Kordula Trapp MBA.", "Traude-Stumpf-Platz 5", "26025", "Aue", 62.01, 10, "2003-04-15", "14:30:27", "2005-08-01 10:08:37", "C", "s195Km"),
+(7, "Yilmaz Wirth", "Stiebitzallee 50/31", "56159", "Luckenwalde", 11.39, 5, "2009-04-27", "00:00:53", "2005-03-03 10:26:46", "C", "oX412o"),
+(8, "Heinz-Dieter Zimmer B.Eng.", "Steuerplatz 52-91", "67632", "Wunsiedel", 16.54, 48, "2007-07-13", "22:18:21", "2008-08-02 15:32:13", "B", "DO52xw"),
+(9, "Tamara Freudenberger MBA.", "Melanie-Schweitzer-Ring 83-24", "60366", "Königs Wusterhausen", 34.32, 85, "2005-09-19", "14:43:14", "2002-10-22 17:01:01", "B", "S719Ok"),
+(10, "Luciano Reinhardt-Bauer", "Francesca-Lorch-Platz 52-70", "10033", "Rockenhausen", 87.51, 93, "2006-05-21", "14:26:30", "2003-05-17 02:46:01", "A", "kD647O"),
+(11, "Herr Nicolai Wirth B.Eng.", "Reichmannstraße 61/18", "47379", "Weißwasser", 91.25, 28, "2006-11-30", "17:47:18", "2009-06-11 08:44:59", "C", "u1030c"),
+(12, "Univ.Prof. Mia Noack MBA.", "Hartungstraße 8495", "37498", "Soest", 51.68, 51, "2008-05-08", "03:44:06", "2000-03-17 20:54:03", "B", "en95nP"),
+(13, "Isa Naser", "Wally-Birnbaum-Ring 71-81", "96499", "Halberstadt", 81.79, 50, "2000-07-21", "08:25:40", "2004-11-25 10:17:36", "C", "Dj42pV"),
+(14, "Annegrete Striebitz B.A.", "Drewesstr. 2242", "94013", "Ebersberg", 91.97, 68, "2005-08-11", "14:59:15", "2008-06-05 10:29:37", "B", "VL69zx"),
+(15, "Rosemarie Wesack-Rogner", "Magnus-Herrmann-Ring 96", "09324", "Miesbach", 35.93, 17, "2009-05-18", "05:15:58", "2006-07-11 06:56:23", "C", "Ff01jO"),
+(16, "Steve Bohnbach-Hofmann", "Adlerring 8/3", "66270", "Hohenmölsen", 26.21, 87, "2009-01-28", "13:50:08", "2005-05-21 22:49:15", "B", "Me66MD"),
+(17, "Prof. Amalie Schönland B.Sc.", "Justine-Conradi-Straße 81", "93792", "Hannoversch Münden", 86.69, 32, "2003-05-22", "14:00:22", "2008-03-21 03:52:59", "C", "3801R4"),
+(18, "Dipl.-Ing. Kay-Uwe Klemt B.Eng.", "Höfiggasse 9", "09521", "Diepholz", 87.97, 96, "2003-11-02", "14:28:09", "2009-06-25 13:19:02", "B", "XP51sB"),
+(19, "Rigo Kroker", "Uli-Koch-Allee 7/6", "04711", "Fürstenwalde", 25.91, 58, "2007-07-18", "16:11:27", "2004-01-07 13:12:17", "A", "9U48Wl");
+

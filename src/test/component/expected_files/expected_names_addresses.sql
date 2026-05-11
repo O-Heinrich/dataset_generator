@@ -1,0 +1,22 @@
+INSERT INTO table_name (id, firstName, last_name, full_name, company_name, street, housenumber, town, plz, street_housenumber) VALUES
+(0, "Felicitas", "Dowerg", "Pawel Höfig", "Hauffer AG & Co. KG", "Beckmanngasse", "3/4", "Stendal", "25534", "Vincent-Kramer-Ring 1503"),
+(1, "Gerdi", "Ortmann", "Svea Seifert-Mielcarek", "Hettner AG & Co. KG", "Säuberlichstraße", "1", "Hechingen", "27824", "Steckelweg 87/28"),
+(2, "Heinz-Werner", "Albers", "Nikolaus Schüler", "Hein AG", "Anita-Hellwig-Ring", "70", "Ludwigsburg", "74687", "Clarissa-Wähner-Weg 5"),
+(3, "Victoria", "Pechel", "Simon Gotthard", "Scheibe AG", "Theodora-Roskoth-Platz", "8/6", "Delitzsch", "34874", "Adalbert-Kade-Platz 3/8"),
+(4, "Constanze", "Rohleder", "Heinz-Dieter Eckbauer-Berger", "Knappe Benthin GmbH", "Nikolaus-Zahn-Weg", "1-8", "Rostock", "93406", "Bohnbachweg 29/55"),
+(5, "Siegmar", "Stadelmann", "Marika Weiß-Gertz", "Roskoth", "Leander-Hörle-Platz", "4200", "Cottbus", "27743", "Mansgasse 4/5"),
+(6, "Henri", "Fliegner", "Anton Liebelt MBA.", "Riehl Mohaupt GmbH & Co. KG", "Krebsallee", "6", "Worbis", "10033", "Wilhelm-Staude-Gasse 3745"),
+(7, "Gülten", "Kohl", "Veronika Trubin-Gumprich", "Scheel Stiftung & Co. KG", "Stolzestr.", "32-96", "Grevesmühlen", "77701", "Spießstr. 97/68"),
+(8, "Herrmann", "Dussen van", "Gino Dussen van B.A.", "Hande Stiftung & Co. KGaA", "Ditschlerinallee", "9", "Schlüchtern", "33412", "Rüdiger-Mende-Allee 44-50"),
+(9, "Erdogan", "Ring", "Univ.Prof. Clemens Hethur B.A.", "Bonbach AG & Co. KGaA", "Ebertstraße", "4", "Brandenburg", "60385", "Jovan-Rogner-Platz 8/8"),
+(10, "Ryszard", "Davids", "Herr Herrmann Drubin B.A.", "Trubin Hornich GmbH & Co. OHG", "Mudeplatz", "95-95", "Meiningen", "96158", "Horst-Günter-Schüler-Allee 4/2"),
+(11, "Marten", "Blümel", "Gloria Köster", "Fiebig Henschel GmbH & Co. OHG", "Hanni-Budig-Weg", "7/5", "Füssen", "09521", "Franco-Zimmer-Weg 58/38"),
+(12, "Katharina", "Hecker", "Wilma Roht-Kobelt", "Zobel GmbH", "Uli-Koch-Allee", "2-3", "Fürstenwalde", "31713", "Lilly-Rosemann-Platz 48"),
+(13, "Folkert", "Reuter", "Reni Gertz", "Speer AG", "Zobelallee", "8", "Mettmann", "76615", "Heidelore-Mühle-Gasse 21"),
+(14, "Evangelos", "Langern", "Stella Stadelmann", "Ullmann Birnbaum GmbH", "Cindy-Patberg-Platz", "6/6", "Guben", "56149", "Rigo-Scheuermann-Gasse 3"),
+(15, "Aleksandra", "Weinhold", "Dr. Birgitt Kramer", "Tlustek", "Roberto-Weihmann-Gasse", "75-21", "Grevenbroich", "99799", "Börnerstraße 14-64"),
+(16, "Cosimo", "Seidel", "Leonid Scheibe", "Kraus", "Rudolphweg", "555", "Recklinghausen", "05423", "Gero-Buchholz-Ring 98"),
+(17, "Hans-Albert", "Süßebier", "Univ.Prof. Heinz-Otto Beyer", "Knappe Stey Stiftung & Co. KGaA", "Wellerweg", "1/8", "Gera", "47277", "Martina-Fischer-Weg 2-5"),
+(18, "Emmerich", "Ortmann", "Maik Pieper", "Hendriks", "Ackermannstr.", "5", "Herford", "15667", "Kochallee 2/7"),
+(19, "Daniel", "Junken", "Florence Matthäi", "Trupp", "Killerstraße", "15/36", "Schrobenhausen", "18844", "Erwin-Gute-Platz 9705");
+

@@ -1,0 +1,17 @@
+[run]
+disable_warnings = [
+    no-ctracer
+    ]
+source = .
+omit =
+    *test*
+    *deprecated.py
+    *typeCheck.py
+
+[report]
+precision = 1
+skip_empty = True
+
+[html]
+skip_empty = True
+directory = ../htmlcoverage

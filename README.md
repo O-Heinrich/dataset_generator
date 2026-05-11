@@ -11,12 +11,14 @@ Es wird vorausgesetzt, dass Python sowie Python venv installiert ist.
 ```console
 python -m venv generator_venv
 generator_venv/bin/pip install wonderwords
-generator_venv/bin/pip install Faker
+generator_venv/bin/pip install Faker==40.4.0
 generator_venv/bin/pip install rstr
 generator_venv/bin/pip install mypy==1.18.2
 generator_venv/bin/pip install tkcalendar
 generator_venv/bin/pip install tkTimePicker
 generator_venv/bin/pip install tkinter-tooltip
+generator_venv/bin/pip install parameterized
+generator_venv/bin/pip install coverage
 ```
 
 ### Powershell
@@ -32,6 +34,8 @@ python -m venv ./generator_venv
 sudo apt install python3-tk
 ./install.sh
 ```
+
+Gehe anschließend in den Ordner generator_venv/lib/python{version}/site-packages und erstelle dort eine Datei (mit beliebigem namen) mit der Endung .pth und schreibe in diese Datei den absoluten Pfad zum src Ordner. (TODO: include in scripts)
 
 ## Usage
 

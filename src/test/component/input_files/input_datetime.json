@@ -1,0 +1,17 @@
+{
+    "table": "table_name",
+    "columns": {
+        "id": "PRIMARY_KEY",
+        "date": {
+            "type": "DATE",
+            "start": "2010-01-01",
+            "end": "2020-01-01"
+        },
+        "time": "TIME",
+        "datetime": {
+            "type": "DATE_TIME",
+            "start": "2020-01-01",
+            "end": "2030-01-01"
+        }
+    }
+}

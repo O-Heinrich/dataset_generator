@@ -1,0 +1,64 @@
+[
+    {
+        "table": "table_name",
+        "columns": {
+            "id": "PRIMARY_KEY",
+            "integer": {
+                "type": "INTEGER",
+                "min": 42,
+                "max": 69
+            },
+            "float": {
+                "type": "FLOAT",
+                "max": 100,
+                "acc": 10
+            }
+        }
+    },
+    {
+        "table": "other_table",
+        "columns": {
+            "id": "PRIMARY_KEY",
+            "fk": {
+                "type": "FOREIGN_KEY",
+                "column": "table_name.id"
+            },
+
+            "lower_int": {
+                "type": "LOWERTHAN_INTEGER",
+                "column": "table_name.integer",
+                "fk": "table_name.id",
+                "max": 69,
+                "diff": 10,
+                "maxdiff": 50
+            },
+            "higher_int": {
+                "type": "HIGHERTHAN_INTEGER",
+                "column": "table_name.integer",
+                "fk": "table_name.id",
+                "max": 119,
+                "diff": 10,
+                "maxdiff": 50
+            },
+
+            "lower_float": {
+                "type": "LOWERTHAN_FLOAT",
+                "column": "table_name.float",
+                "fk": "table_name.id",
+                "min": -75,
+                "max": 100,
+                "diff": 50,
+                "maxdiff": 100
+            },
+            "higher_float": {
+                "type": "HIGHERTHAN_FLOAT",
+                "column": "table_name.float",
+                "fk": "table_name.id",
+                "max": 175,
+                "diff": 50,
+                "maxdiff": 100
+            }
+        }
+            
+    }
+]

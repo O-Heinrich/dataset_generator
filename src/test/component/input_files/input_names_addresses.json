@@ -1,0 +1,15 @@
+{
+    "table": "table_name",
+    "columns": {
+        "id": "PRIMARY_KEY",
+        "firstName": "FIRST_NAME",
+        "last_name": "LAST_NAME",
+        "full_name": "FULL_NAME",
+        "company_name": "COMPANY_NAME",
+        "street": "STREET",
+        "housenumber": "HOUSENUMBER",
+        "town": "TOWN",
+        "plz": "PLZ",
+        "street_housenumber": "STREET_HOUSENUMBER"
+    }
+}

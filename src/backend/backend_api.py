@@ -14,10 +14,10 @@ def generateData(
         json: Union[list[dict[str, Any]], dict[str, Any]], # json input according to documentation
         targetFilePath: Optional[str]=None, # Filepath where the query will be written. Generates a random filename if None
         filemode: str="x", # Mode in which to write the file
-        noNewLine: bool=False, # Currently not implemented
+        noNewLine: bool=False, # If true, does not make newlines between inserted rows
         localization: str="de_DE", # localization according to https://faker.readthedocs.io/en/master/#localization
         encoding: str="utf-8", # encoding in which to write the file
-        dialect: SD=SD.DEFAULT
+        dialect: SD=SD.DEFAULT # SQL-Dialect, currently suppported: PostgreSQL
 ) -> Optional[str]:
     """
     API for generating SQL-Queries.

@@ -1,0 +1,23 @@
+[
+    {
+        "table": "table1",
+        "columns": {
+            "id": "PRIMARY_KEY",
+            "name": "FULL_NAME",
+            "number": {
+                "type": "INTEGER",
+                "max": 100
+            }
+        }
+    },
+    {
+        "table": "table2",
+        "columns": {
+            "id": "PRIMARY_KEY",
+            "address": "STREET_HOUSENUMBER",
+            "PLZ": "PLZ",
+            "town": "TOWN"
+        },
+        "amount": 10
+    }
+]

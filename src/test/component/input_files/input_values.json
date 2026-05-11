@@ -1,0 +1,18 @@
+{
+    "table": "table_name",
+    "columns": {
+        "id": "PRIMARY_KEY",
+        "value": {
+            "type": "VALUES",
+            "values": ["a", "a", "b", "c", "a"]
+        },
+        "cycling_value": {
+            "type": "CYCLING_VALUES",
+            "values": ["a", "b", "c", "d"]
+        },
+        "shuffled_values": {
+            "type": "SHUFFLED_VALUES",
+            "values": ["a", "b", "c", "d"]
+        }
+    }
+}

@@ -1,0 +1,39 @@
+[
+    {
+        "table": "myCoolTable",
+        "columns": {
+            "unique_id": "PRIMARY_KEY",
+            "name": "FULL_NAME",
+            "address": "STREET_HOUSENUMBER",
+            "plz": "PLZ",
+            "town": "TOWN",
+            "Float": {
+                "type": "FLOAT",
+                "max": 100.0
+            },
+            "Int": {
+                "type": "INTEGER",
+                "max": 100
+            },
+            "Date": {
+                "type": "DATE",
+                "start": "2000-01-01",
+                "end": "2010-01-01"
+            },
+            "Time": "TIME",
+            "DateTime": {
+                "type": "DATE_TIME",
+                "start": "2000-01-01",
+                "end": "2010-01-01"
+            },
+            "values": {
+                "type": "VALUES",
+                "values": ["A", "B", "C"]
+            },
+            "regex": {
+                "type": "FORMAT_STRING",
+                "regex": "\\w\\w\\d\\d\\w\\w"
+            }
+        }
+    }
+]

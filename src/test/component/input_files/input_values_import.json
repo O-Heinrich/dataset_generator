@@ -1,0 +1,19 @@
+{
+    "table": "table_name",
+    "columns": {
+        "id": "PRIMARY_KEY",
+        "value": {
+            "type": "VALUES",
+            "import": "./test/component/input_files/values1.txt"
+        },
+        "cycling_value": {
+            "type": "CYCLING_VALUES",
+            "import": "./test/component/input_files/values2.txt"
+        },
+        "shuffled_values": {
+            "type": "SHUFFLED_VALUES",
+            "import": "./test/component/input_files/values3.txt",
+            "sep": ","
+        }
+    }
+}

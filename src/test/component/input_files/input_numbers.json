@@ -1,0 +1,24 @@
+{
+    "table": "table_name",
+    "columns": {
+        "id": "PRIMARY_KEY",
+        "integer": {
+            "type": "INTEGER",
+            "min": 42,
+            "max": 69
+        },
+        "float": {
+            "type": "FLOAT",
+            "max": 100,
+            "acc": 1000
+        },
+        "money": {
+            "type": "MONEY",
+            "max": 1000
+        },
+        "counter": {
+            "type": "COUNTING",
+            "nextkey": 100
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "table": "table_name",
+    "columns": {
+        "id": "PRIMARY_KEY",
+        "time_quarters": {
+            "type": "TIME",
+            "timeRounding": 15
+        },
+        "time_twohours": {
+            "type": "TIME",
+            "timeRounding": 120
+        }
+    }
+}

@@ -1,5 +1,7 @@
 import argparse
 import json
+import random
+from faker import Faker
 from enums.dialect import SqlDialect as SD, toDialect
 from backend.backend_api import generateData
 from typing import Union
@@ -19,6 +21,7 @@ parser.add_argument('-o', action="store_true", dest="overwrite", default=False)
 parser.add_argument('-n', action="store", dest="amount", type=int, default=20)
 parser.add_argument('--oneline', action="store_true", dest="noNewline", default=False)
 parser.add_argument('-d', action="store", dest="sqlDialect", default="")
+parser.add_argument('--seed', action="store", dest="seed", default=0)
 
 parsed: argparse.Namespace = parser.parse_args()
 localization: str = parsed.location
@@ -30,6 +33,11 @@ overwriteMode: bool = parsed.overwrite
 amount: int = parsed.amount
 noNewline: bool = parsed.noNewline
 sqlDialect: str = parsed.sqlDialect
+seed: int = int(parsed.seed)
+
+if seed > 0:
+    Faker.seed(seed) # Faker version: 40.4.0
+    random.seed(seed)
 
 # parse values for filemode and sql dialect
 filemode: str = "w" if overwriteMode else "a" if appendMode else "x"

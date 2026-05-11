@@ -1,0 +1,128 @@
+[
+    {
+        "table": "table_name",
+        "columns": {
+            "id": "PRIMARY_KEY",
+            "date": {
+                "type": "DATE",
+                "start": "2010-01-01",
+                "end": "2020-01-01"
+            },
+            "time": {
+                "type": "TIME",
+                "startTime": "09:00:00",
+                "endTime": "15:00:00"
+            },
+            "datetime": {
+                "type": "DATE_TIME",
+                "start": "2020-01-01",
+                "end": "2030-01-01"
+            }
+        }
+    },
+    {
+        "table": "other_table",
+        "columns": {
+            "id": "PRIMARY_KEY",
+            "fk": {
+                "type": "FOREIGN_KEY",
+                "column": "table_name.id"
+            },
+
+            "dateBeforeDate": {
+                "type": "LOWERTHAN_DATE",
+                "column": "table_name.date",
+                "fk": "table_name.id",
+                "start": "2005-01-01",
+                "timeDiff": {"days": 730},
+                "timeMaxdiff": {"days": 1460}
+            },
+            "dateBeforeDatetime": {
+                "type": "LOWERTHAN_DATE",
+                "column": "table_name.datetime",
+                "fk": "table_name.id",
+                "start": "2015-01-01",
+                "timeDiff": {"days": 730},
+                "timeMaxdiff": {"days": 1460}
+            },
+            "dateAfterDate": {
+                "type": "HIGHERTHAN_DATE",
+                "column": "table_name.date",
+                "fk": "table_name.id",
+                "end": "2025-01-01",
+                "timeDiff": {"days": 730},
+                "timeMaxdiff": {"days": 1460}
+            },
+            "dateAfterDatetime": {
+                "type": "HIGHERTHAN_DATE",
+                "column": "table_name.datetime",
+                "fk": "table_name.id",
+                "end": "2035-01-01",
+                "timeDiff": {"days": 730},
+                "timeMaxdiff": {"days": 1460}
+            },
+
+            "timeBeforeTime": {
+                "type": "LOWERTHAN_TIME",
+                "column": "table_name.time",
+                "fk": "table_name.id",
+                "timeDiff": {"hours": 3},
+                "timeMaxdiff": {"hours": 6}
+            },
+            "timeBeforeDatetime": {
+                "type": "LOWERTHAN_TIME",
+                "column": "table_name.datetime",
+                "fk": "table_name.id",
+                "timeDiff": {"hours": 3},
+                "timeMaxdiff": {"hours": 6}
+            },
+            "timeAfterTime": {
+                "type": "HIGHERTHAN_TIME",
+                "column": "table_name.time",
+                "fk": "table_name.id",
+                "timeDiff": {"hours": 3},
+                "timeMaxdiff": {"hours": 6}
+            },
+            "timeAfterDatetime": {
+                "type": "HIGHERTHAN_TIME",
+                "column": "table_name.datetime",
+                "fk": "table_name.id",
+                "timeDiff": {"hours": 3},
+                "timeMaxdiff": {"hours": 6}
+            },
+
+            "datetimeBeforeDate": {
+                "type": "LOWERTHAN_DATETIME",
+                "column": "table_name.date",
+                "fk": "table_name.id",
+                "start": "2005-01-01",
+                "timeDiff": {"days": 730},
+                "timeMaxdiff": {"days": 1460}
+            },
+            "datetimeBeforeDatetime": {
+                "type": "LOWERTHAN_DATETIME",
+                "column": "table_name.datetime",
+                "fk": "table_name.id",
+                "start": "2015-01-01",
+                "timeDiff": {"days": 730},
+                "timeMaxdiff": {"days": 1460}
+            },
+            "datetimeAfterDate": {
+                "type": "HIGHERTHAN_DATETIME",
+                "column": "table_name.date",
+                "fk": "table_name.id",
+                "end": "2025-01-01",
+                "timeDiff": {"days": 730},
+                "timeMaxdiff": {"days": 1460}
+            },
+            "datetimeAfterDatetime": {
+                "type": "HIGHERTHAN_DATETIME",
+                "column": "table_name.datetime",
+                "fk": "table_name.id",
+                "end": "2035-01-01",
+                "timeDiff": {"days": 730},
+                "timeMaxdiff": {"days": 1460}
+            }
+        }
+    }
+]

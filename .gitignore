@@ -2,9 +2,13 @@
 /.idea/
 /src/__pycache__/
 /src/*/__pycache__/
+/src/test/*/__pycache__/
 
 # Ignore most input and output files
 *.sql
 *.json
 *.txt
 !example.json
+!/src/test/component/expected_files/*
+!/src/test/component/input_files/*
+/src/.coverage
