@@ -8,86 +8,65 @@ werden.
 
 Es wird vorausgesetzt, dass Python sowie Python venv installiert ist.
 
-```console
-python -m venv generator_venv
-generator_venv/bin/pip install wonderwords
-generator_venv/bin/pip install Faker==40.4.0
-generator_venv/bin/pip install rstr
-generator_venv/bin/pip install mypy==1.18.2
-generator_venv/bin/pip install tkcalendar
-generator_venv/bin/pip install tkTimePicker
-generator_venv/bin/pip install tkinter-tooltip
-generator_venv/bin/pip install parameterized
-generator_venv/bin/pip install coverage
-```
-
-### Powershell
+#### Powershell
 
 ```powershell
 ./install.ps1
 ```
 
-### Linux
+#### Linux
 
 ```bash
-python -m venv ./generator_venv
-sudo apt install python3-tk
+sed -i 's/\r//g' install.sh # Workaround for replacing Windows CRLF with LF
 ./install.sh
 ```
 
-Gehe anschließend in den Ordner generator_venv/lib/python{version}/site-packages und erstelle dort eine Datei (mit beliebigem namen) mit der Endung .pth und schreibe in diese Datei den absoluten Pfad zum src Ordner. (TODO: include in scripts)
-
 ## Usage
 
-### GUI-Version
+### Powershell
 
-```console
-./generator_venv/bin/activate
-python src/gui_gen.py
-```
-
-Unter Powershell:
+#### GUI-Version
 
 ```powershell
 ./start.ps1
 ```
 
-Unter Linux:
+#### Mit JSON config
+
+```powershell
+./gen.ps1
+```
+
+#### Tests
+
+```powershell
+./runTests.ps1
+```
+
+### Linux
+
+#### GUI-Version
 
 ```bash
 source generator_venv/bin/activate
 python src/gui_gen.py
 ```
 
-### Sonst
-
-Wenn noch nicht geschehen muss die virtuelle environment aktiviert werden:
-
-```console
-./generator_venv/bin/activate
-```
-
-Unter Powershell:
-
-```powershell
-./generator_venv/bin/Activate.ps1
-```
-
-Unter Linux:
+#### Mit JSON config
 
 ```bash
-source generator_venv/bin/activate
+./gen.sh
 ```
 
-Das script kann mit folgendem Befehl ausgeführt werden:
+#### Tests
 
-```console
-python src/dataset_gen.py
+```bash
+./runTests.sh
 ```
 
-#### Options
+### Options
 
-Folgende Optionen können an den Befehl angehangen werden:
+Folgende Optionen können an den Befehl (Variante mit JSON config) angehangen werden:
 
 | Option | Beschreibung | Default Behavior |
 | - | - | - |
@@ -100,9 +79,10 @@ Folgende Optionen können an den Befehl angehangen werden:
 | -d | Spezieller SQL-Dialekt - Unterstützte Werte: PostgreSQL (p) - case insensitive, Abkürzung in Klammern | |
 | --oneline | Keine Zeilenumbrüche innerhalb eines INSERT statements | False |
 | -l | Location wie in [https://faker.readthedocs.io/en/master/#localization](https://faker.readthedocs.io/en/master/#localization). | de_DE |
-> **-l Kann für Addressen zu Fehlern führen.**
+> **-l Kann für Addressen zu Fehlern führen.**  
+> **--online ist -oneline in Powershell und -i unter Linux**
 
-#### Config
+### Config
 
 Die Konfiguration geschieht dabei über eine json Datei, in welcher der Name der Tabelle sowie die Art der zu
 generierenden Daten festgelegt werden kann. Beispielhaft siehe example.json. Die json hat folgende Felder:
@@ -153,7 +133,7 @@ Alternativ kann eine Liste von Tabellen angegeben werden, um Daten für mehrere 
 
 Die Tabellennamen dürfen sich hier nicht wiederholen.
 
-##### Columns
+#### Columns
 
 Das Columns Feld enthält die Namen der Spalten als Schlüssel und die Beschreibung des jeweiligen Datentyps als Wert.
 Zum Beispiel:
@@ -305,7 +285,7 @@ Der Code liegt im src Ordner und ist dort weiter unterteilt. Die auf der oberste
 ausführbaren Dateien dataset_gen.py und gui_gen.py sowie die typeCheck.py, welche striktere Typisierung sicherstellt.
 Der Programmcode ist außerdem in backend und frontend (gui) unterteilt. Der enums Ordner enthält Enumerationstypen und
 der exceptions Ordner verwendetet custom Exceptions, welche jeweils sowohl vom frontend als auch vom backend verwendet
-werden könnten.
+werden könnten. Im test Ordner sind Component Tests enthalten, welche derzeit lediglich das backend testen.
 
 ### dataset_gen.py
 
