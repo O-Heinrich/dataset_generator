@@ -29,7 +29,7 @@ class TestBackend(unittest.TestCase):
 
 
     @parameterized.expand([
-        "datetime", "datetime_dependend", "time_rounding", "datetime_parameters",
+        "datetime", "datetime_dependend", "time_rounding", "datetime_parameters", "time_minmax",
         "names_addresses", "names_titles",
         "regex",
         "values",# "values_import", # TODO: values_import will fail when this is run individually, due to different relative paths

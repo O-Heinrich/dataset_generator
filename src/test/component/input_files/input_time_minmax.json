@@ -1,0 +1,20 @@
+{
+    "table": "tabelle",
+    "columns": {
+        "id": "PRIMARY_KEY",
+        "uhrzeitend": {
+            "type": "TIME",
+            "startTime": "23:59:58"
+        },
+        "uhrzeitstart": {
+            "type": "TIME",
+            "endTime": "00:00:01"
+        },
+        "delta1": {
+            "type": "TIME",
+            "startTime": "10:24:01",
+            "endTime": "10:24:02"
+        }
+    },
+    "amount": 10
+}

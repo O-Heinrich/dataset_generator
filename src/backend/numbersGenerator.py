@@ -37,11 +37,14 @@ def generateTime(fake: Faker, startTime: str="00:00:00", endTime: str="23:59:59"
     Generates a random time using the given Faker.
     The startTime and endTime have to be strings in the 24 hour format %H:%M:%S
     and the timeRounding has to be a positive integer representing the minutes to be rounded to.
-    The endTime is exclusive and at max 23:59:59, meaning that that exact time cannot be generated.
     """
     start: datetime = datetime.strptime(startTime, "%H:%M:%S")
-    end: datetime = datetime.strptime(endTime, "%H:%M:%S")# + timedelta(seconds=1)
-    # For some unknown reason Faker is buggy with this so just ignoring that one second
+    end: datetime = datetime.strptime(endTime, "%H:%M:%S")
+    if abs(end - start) == timedelta(seconds=1):
+        if random.getrandbits(1):
+            return roundTime(start.time(), timeRounding)
+        else:
+            return roundTime(end.time(), timeRounding)
     generated: time = fake.date_time_between(start_date=start, end_date=end).time()
     return roundTime(generated, timeRounding)
 
