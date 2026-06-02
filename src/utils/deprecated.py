@@ -2,6 +2,8 @@ from typing import Callable, ParamSpec, TypeVar
 import warnings
 import functools
 
+# https://stackoverflow.com/questions/2536307/decorators-in-the-python-standard-lib-deprecated-specifically
+
 rT = TypeVar('rT') # return type
 pT = ParamSpec('pT') # parameters type
 def deprecated(func: Callable[pT, rT]) -> Callable[pT, rT]:
@@ -13,9 +15,11 @@ def deprecated(func: Callable[pT, rT]) -> Callable[pT, rT]:
     @functools.wraps(func)
     def new_func(*args: pT.args, **kwargs: pT.kwargs):
         warnings.simplefilter('always', DeprecationWarning)  # turn off filter
-        warnings.warn("Call to a deprecated function {}.".format(func.__name__),
-                      category=DeprecationWarning,
-                      stacklevel=2)
+        warnings.warn(
+            "Call to a deprecated function {}.".format(func.__name__),
+            category=DeprecationWarning,
+            stacklevel=2
+            )
         warnings.simplefilter('default', DeprecationWarning)  # reset filter
         return func(*args, **kwargs)
     return new_func

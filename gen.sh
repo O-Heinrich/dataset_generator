@@ -14,9 +14,10 @@ e=""
 d=""
 oneline=false
 l=""
+seed=""
 
 print_usage() {
-  printf "Usage:\nFlags:\n-p, -f, -a, -o, -n, -e, -d, -l: Same as for Script, see README\n-i: Equivalent to --oneline for Script, see README\n"
+  printf "Usage:\nFlags:\n-p, -f, -a, -o, -n, -e, -d, -l: Same as for Script, see README\n-i: Equivalent to --oneline for Script, see README\n-s: Equivalent to --seed for Script, see README\n"
 }
 
 OPTIND=1
@@ -31,6 +32,7 @@ while getopts 'p:f:aon:e:d:il:' flag; do
     d) d="${OPTARG}" ;;
     i) oneline=true ;;
     l) l="${OPTARG}" ;;
+    s) seed="${OPTARG}" ;;
     *) print_usage
        exit 1 ;;
   esac
@@ -43,6 +45,7 @@ done
 
 source ./generator_venv/bin/activate
 command="python src/dataset_gen.py"
+# Pass down given flags
 if [ ! -z "$p" ]; then
     command="${command} -p ${p}"
 fi
@@ -68,6 +71,9 @@ if $oneline; then
 fi
 if [ ! -z "$l" ]; then
     command="$command -l $l"
+fi
+if [ ! -z "$seed" ]; then
+    command="$command --seed $seed"
 fi
 eval $command
 deactivate

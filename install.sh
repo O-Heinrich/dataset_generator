@@ -22,10 +22,12 @@ pip install parameterized
 pip install coverage
 deactivate
 
+# Fix git putting windows newlines
 sed -i 's/\r//g' start.sh
 sed -i 's/\r//g' gen.sh
 sed -i 's/\r//g' runTests.sh
 
+# Add source folder as path https://stackoverflow.com/a/28639201
 cd src
 srcPath=$(pwd)
 cd ../generator_venv/lib
@@ -34,4 +36,5 @@ cd $pythonPath
 cd site-packages
 echo $srcPath > paths.pth
 cd ../../../..
+
 exit 0

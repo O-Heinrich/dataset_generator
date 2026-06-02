@@ -1,7 +1,7 @@
 import re
 from datetime import date, datetime, time, timedelta
 from enums.datatypes import Datatype as Dt
-from deprecated import deprecated
+from utils.deprecated import deprecated
 import random
 from typing import Any, Optional, Union
 

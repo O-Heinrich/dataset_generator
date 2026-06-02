@@ -23,6 +23,7 @@ else {
 }
 
 $Command = "python src/dataset_gen.py"
+# Pass down given flags
 if (($PSBoundParameters.ContainsKey('p'))) {
     $Command = $Command + " -p " + $p
 }

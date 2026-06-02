@@ -8,5 +8,5 @@ else {
     Write-Output "Virtual Environment has neither Scripts nor bin directory"
     exit 1
 }
-python src/gui_gen.py -t
+python src/gui_gen.py -t            # Run without mypy type checking
 deactivate

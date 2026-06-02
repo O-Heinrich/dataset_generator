@@ -1,5 +1,5 @@
 param (
-    [switch]$c = $false
+    [switch]$c = $false                 # If true, run tests with coverage
 )
 
 if (Test-Path -Path './generator_venv/Scripts') {
@@ -14,9 +14,9 @@ else {
 }
 cd src
 if ($c) {
-    python -m coverage run -m unittest
-    python -m coverage html
-    rm .coverage
+    python -m coverage run -m unittest  # Run with coverage
+    python -m coverage html             # Turn coverage report into html
+    rm .coverage                        # Clean up
 }
 else {
     python -m unittest

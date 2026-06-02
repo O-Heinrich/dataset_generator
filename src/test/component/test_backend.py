@@ -37,6 +37,11 @@ class TestBackend(unittest.TestCase):
         "dependend_owntable"
     ])
     def test_seeded(self, name: str):
+        """
+        Takes a file with named "input_" + name + ".json" from the input_files directory as json input
+        Expects a query equal to the content of "expected_" + name + ".sql" from the expected_files directory as sql output
+        To generate the expected file run ./gen.ps1 with the -seed flag or ./gen.sh with the -s flag set to 42
+        """
         ### given
         self.seed()
         inputPath = BASE_PATH + "input_files/input_" + name + ".json"

@@ -68,30 +68,32 @@ python src/gui_gen.py
 
 Folgende Optionen können an den Befehl (Variante mit JSON config) angehangen werden:
 
-| Option | Beschreibung | Default Behavior |
-| - | - | - |
-| -p | json Datei, in welcher die Informationen über die Datenbank stehen. Siehe [Config](#config) | example.json |
-| -f | Datei, in welche das Ergebnis als SQL-Befehl in Textformat geschrieben wird | .sql Datei mit zufällig generierten Namen |
-| -a | SQL-Befehl wird an Datei angehangen. Wird von -o überschrieben | False - Existiert die Zieldatei bereits, so schlägt die Generierung fehl |
-| -o | Neuer Inhalt überschreibt Inhalt der Datei, sollte die Datei bereits existieren. Überschreibt -a | False - Existiert die Zieldatei bereits, so schlägt die Generierung fehl |
-| -n | Anzahl der zu generierenden Datensätze. Wenn in config json Datei angegeben, wird dieser Wert überschrieben | 20 |
-| -e | Zeichencodierung für die zu erstellende Datei | utf-8 |
-| -d | Spezieller SQL-Dialekt - Unterstützte Werte: PostgreSQL (p) - case insensitive, Abkürzung in Klammern | |
-| --oneline | Keine Zeilenumbrüche innerhalb eines INSERT statements | False |
-| -l | Location wie in [https://faker.readthedocs.io/en/master/#localization](https://faker.readthedocs.io/en/master/#localization). | de_DE |
-> **-l Kann für Addressen zu Fehlern führen.**  
+| Option    | Beschreibung                                                                                                                  | Default Behavior                                                         |
+|-----------|-------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| -p        | json Datei, in welcher die Informationen über die Datenbank stehen. Siehe [Config](#config)                                   | example.json                                                             |
+| -f        | Datei, in welche das Ergebnis als SQL-Befehl in Textformat geschrieben wird                                                   | .sql Datei mit zufällig generierten Namen                                |
+| -a        | SQL-Befehl wird an Datei angehangen. Wird von -o überschrieben                                                                | False - Existiert die Zieldatei bereits, so schlägt die Generierung fehl |
+| -o        | Neuer Inhalt überschreibt Inhalt der Datei, sollte die Datei bereits existieren. Überschreibt -a                              | False - Existiert die Zieldatei bereits, so schlägt die Generierung fehl |
+| -n        | Anzahl der zu generierenden Datensätze. Wenn in config json Datei angegeben, wird dieser Wert überschrieben                   | 20                                                                       |
+| -e        | Zeichencodierung für die zu erstellende Datei                                                                                 | utf-8                                                                    |
+| -d        | Spezieller SQL-Dialekt - Unterstützte Werte: PostgreSQL (p) - case insensitive, Abkürzung in Klammern                         |                                                                          |
+| --oneline | Keine Zeilenumbrüche innerhalb eines INSERT statements                                                                        | False                                                                    |
+| -l        | Location wie in [https://faker.readthedocs.io/en/master/#localization](https://faker.readthedocs.io/en/master/#localization). | de_DE                                                                    |
+| --seed    | Setzt ein bestimmtes numerisches Seed für Zufallswerte. Hat keinen einfluss auf wonderwords                                   |                                                                          |
+> **-l kann für Addressen zu Fehlern führen.**  
 > **--online ist -oneline in Powershell und -i unter Linux**
+> **--seed ist -seed unter Powershell und -s unter Linux**
 
 ### Config
 
 Die Konfiguration geschieht dabei über eine json Datei, in welcher der Name der Tabelle sowie die Art der zu
 generierenden Daten festgelegt werden kann. Beispielhaft siehe example.json. Die json hat folgende Felder:
 
-| Feldname | Typ | | Beschreibung |
-| - | - | - | - |
-| table | String | required | Name der Tabelle |
-| columns | Map | required | Repräsentation der Spalten der Tabelle und ihrer Typen. Siehe [Columns](#columns) |
-| amount | int | optional | Anzahl der für diese Tabelle zu generierenden Datensätze. Überschreibt die -n Option |
+| Feldname | Typ    |          | Beschreibung                                                                         |
+|----------|--------|----------|--------------------------------------------------------------------------------------|
+| table    | String | required | Name der Tabelle                                                                     |
+| columns  | Map    | required | Repräsentation der Spalten der Tabelle und ihrer Typen. Siehe [Columns](#columns)    |
+| amount   | int    | optional | Anzahl der für diese Tabelle zu generierenden Datensätze. Überschreibt die -n Option |
 
 Zum Beispiel:
 
@@ -296,15 +298,6 @@ vom frontend ab und nutzt lediglich die API des backends.
 
 Die gui_gen.py ruft lediglich das frontend auf, dient also zum Öffnen des Programms via GUI.
 
-### typeCheck.py
-
-Dient zur strikten Typisierung und prüft diese mittels mypy und schließt das Programm vorzeitig bei Fehlern.
-
-### deprecated.py
-
-Enthält einen decorator, um funktionen als deprecated zu markieren und eine Warnung auszugeben, wenn die Funktion noch
-verwendet wird.
-
 ### backend
 
 Die grobe Struktur des backends besteht aus dem TableModel, welches eine Datenbanktabelle repräsentiert, während die
@@ -321,3 +314,15 @@ ColumnFrame, welche je Tabellen und ihre Spalten darstellen. In columnDetails.py
 ihre Parameter hinterlegt. Zudem stehen mit ColumnEntry, DatetimeEntry, LabelWithExtras, ListEntry und TimeDictEntry
 custom Widgets bereit. Für Details siehe die jeweiligen Klassen/Dateien.
 
+### test
+
+Enthält alle tests, welche automatisiert laufen gelassen werden können.
+
+### utils
+
+Enthält diverse Klassen oder Funktionen, welche nicht spezifisch zu einem Teil des Codes gehören.
+
+### .coveragerc
+
+Die .coveragerc Datei gibt Konfigurationen für den zu generierenden Coverage Report
+vor. Siehe [Dokumentation](https://coverage.readthedocs.io/en/7.14.1/config.html).

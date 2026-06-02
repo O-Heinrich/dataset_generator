@@ -20,6 +20,7 @@ pip install parameterized
 pip install coverage
 deactivate
 
+# Add source folder as path https://stackoverflow.com/a/28639201
 cd src
 $srcPath = (Get-Item .).FullName
 cd ../generator_venv/lib

@@ -5,7 +5,7 @@ from faker import Faker
 from enums.dialect import SqlDialect as SD, toDialect
 from backend.backend_api import generateData
 from typing import Union
-from typeCheck import typeCheck
+from utils.typeCheck import typeCheck
 
 # static type checking with mypy
 typeCheck()

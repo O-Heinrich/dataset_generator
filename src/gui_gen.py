@@ -1,6 +1,6 @@
 from tkinter import Tk
 from gui.app import App
-from typeCheck import typeCheck
+from utils.typeCheck import typeCheck
 import argparse
 import platform
 

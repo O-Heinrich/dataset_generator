@@ -3,6 +3,7 @@ disable_warnings = [
     no-ctracer
     ]
 source = .
+; Do not include the tests themselves and some utils
 omit =
     *test*
     *deprecated.py

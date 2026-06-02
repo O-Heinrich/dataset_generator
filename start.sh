@@ -5,6 +5,6 @@ if [ ! -d "generator_venv" ]; then
     exit 1
 fi
 source ./generator_venv/bin/activate
-python src/gui_gen.py -t
+python src/gui_gen.py -t                # Run without mypy type checking
 deactivate
 exit 0

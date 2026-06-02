@@ -13,7 +13,7 @@ print_usage() {
 
 while getopts 'c' flag; do
     case "${flag}" in
-        c) c=true ;;
+        c) c=true ;;                            # If flag set, run tests with coverage
         *) print_usage
             exit 1 ;;
     esac
@@ -23,9 +23,9 @@ source ./generator_venv/bin/activate
 cd src
 if $c;
 then
-    python -m coverage run -m unittest
-    python -m coverage html
-    rm .coverage
+    python -m coverage run -m unittest          # Run with coverage
+    python -m coverage html                     # Turn coverage report into html
+    rm .coverage                                # Clean up
 else
     python -m unittest
 fi
